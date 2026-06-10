@@ -19,7 +19,7 @@ export default async function Home({
   const { data: anbieterData } = await supabase
     .from("anbieter")
     .select(
-      "id, slug, name, beschreibung, ort, logo_url, anbieter_kategorien(kategorien(name, slug))"
+      "id, slug, name, beschreibung, ort, anbieter_kategorien(kategorien(name, slug))"
     )
     .eq("status", "aktiv")
     .order("name");

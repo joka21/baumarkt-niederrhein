@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { getGewerke, type Anbieter } from "@/lib/types";
+import { getGewerkeFarbe } from "@/lib/gewerke";
+import PlatzhalterBild from "@/components/PlatzhalterBild";
 
 function HeartIcon({ className = "" }: { className?: string }) {
   return (
@@ -18,33 +20,28 @@ function HeartIcon({ className = "" }: { className?: string }) {
 
 export default function AnbieterCard({ anbieter }: { anbieter: Anbieter }) {
   const gewerke = getGewerke(anbieter);
-  const erstesGewerk = gewerke[0]?.name;
+  const erstesGewerk = gewerke[0];
+  const farbe = getGewerkeFarbe(erstesGewerk?.slug);
+  const initial = anbieter.name.charAt(0).toUpperCase();
 
   return (
     <Link href={`/anbieter/${anbieter.slug}`} className="group flex flex-col">
-      <div className="relative overflow-hidden rounded-2xl">
-        <div className="aspect-square bg-gradient-to-br from-orange-100 via-orange-50 to-stone-100 transition-transform duration-300 group-hover:scale-105" />
+      <div className="relative aspect-square overflow-hidden rounded-2xl">
+        <PlatzhalterBild
+          color={farbe}
+          initial={initial}
+          className="transition-transform duration-300 group-hover:scale-105"
+          letterClassName="text-6xl"
+        />
         <span className="absolute right-3 top-3 text-stone-900/30 transition-colors group-hover:text-stone-900/50">
           <HeartIcon className="h-7 w-7 drop-shadow" />
         </span>
-        {anbieter.logo_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={anbieter.logo_url}
-            alt={anbieter.name}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <span className="absolute inset-0 flex items-center justify-center text-4xl font-bold text-orange-600/40">
-            {anbieter.name.charAt(0)}
-          </span>
-        )}
       </div>
 
       <div className="mt-3">
         <h3 className="font-semibold text-stone-900">{anbieter.name}</h3>
         <p className="mt-0.5 text-sm text-stone-500">
-          {[erstesGewerk, anbieter.ort].filter(Boolean).join(" · ")}
+          {[erstesGewerk?.name, anbieter.ort].filter(Boolean).join(" · ")}
         </p>
       </div>
     </Link>

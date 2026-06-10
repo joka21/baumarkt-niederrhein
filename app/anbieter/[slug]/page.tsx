@@ -2,6 +2,8 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { getGewerke, type Anbieter } from "@/lib/types";
+import { getGewerkeFarbe } from "@/lib/gewerke";
+import PlatzhalterBild from "@/components/PlatzhalterBild";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -67,6 +69,8 @@ export default async function AnbieterDetail({
   // kategorien jedoch ein einzelnes Objekt – daher die Konvertierung über unknown.
   const anbieter = data as unknown as Anbieter;
   const gewerke = getGewerke(anbieter);
+  const farbe = getGewerkeFarbe(gewerke[0]?.slug);
+  const initial = anbieter.name.charAt(0).toUpperCase();
   const standort = [anbieter.plz, anbieter.ort].filter(Boolean).join(" ");
 
   return (
@@ -86,13 +90,15 @@ export default async function AnbieterDetail({
           </p>
         </div>
 
-        {/* Galerie aus Platzhalterflächen */}
+        {/* Galerie aus Platzhalter-Bildflächen in Gewerk-Farbe */}
         <div className="mt-6 grid grid-cols-4 grid-rows-2 gap-2 overflow-hidden rounded-2xl sm:h-80">
-          <div className="col-span-4 row-span-2 h-48 bg-gradient-to-br from-orange-100 via-orange-50 to-stone-100 sm:col-span-2 sm:h-auto" />
-          <div className="hidden bg-stone-100 sm:block" />
-          <div className="hidden bg-stone-100 sm:block" />
-          <div className="hidden bg-stone-100 sm:block" />
-          <div className="hidden bg-stone-100 sm:block" />
+          <div className="col-span-4 row-span-2 h-48 sm:col-span-2 sm:h-auto">
+            <PlatzhalterBild color={farbe} initial={initial} letterClassName="text-7xl" />
+          </div>
+          <div className="hidden opacity-90 sm:block" style={{ backgroundColor: farbe }} />
+          <div className="hidden opacity-75 sm:block" style={{ backgroundColor: farbe }} />
+          <div className="hidden opacity-80 sm:block" style={{ backgroundColor: farbe }} />
+          <div className="hidden opacity-95 sm:block" style={{ backgroundColor: farbe }} />
         </div>
 
         {/* Zweispaltig */}
