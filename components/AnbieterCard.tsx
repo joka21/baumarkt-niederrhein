@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getGewerke, type Anbieter } from "@/lib/types";
-import { getGewerkeFarbe } from "@/lib/gewerke";
-import PlatzhalterBild from "@/components/PlatzhalterBild";
+import GewerkeBild from "@/components/GewerkeBild";
 
 function HeartIcon({ className = "" }: { className?: string }) {
   return (
@@ -21,15 +20,14 @@ function HeartIcon({ className = "" }: { className?: string }) {
 export default function AnbieterCard({ anbieter }: { anbieter: Anbieter }) {
   const gewerke = getGewerke(anbieter);
   const erstesGewerk = gewerke[0];
-  const farbe = getGewerkeFarbe(erstesGewerk?.slug);
-  const initial = anbieter.name.charAt(0).toUpperCase();
 
   return (
     <Link href={`/anbieter/${anbieter.slug}`} className="group flex flex-col">
       <div className="relative aspect-square overflow-hidden rounded-2xl">
-        <PlatzhalterBild
-          color={farbe}
-          initial={initial}
+        <GewerkeBild
+          gewerkeSlug={erstesGewerk?.slug}
+          gewerkeName={erstesGewerk?.name}
+          name={anbieter.name}
           className="transition-transform duration-300 group-hover:scale-105"
           letterClassName="text-6xl"
         />

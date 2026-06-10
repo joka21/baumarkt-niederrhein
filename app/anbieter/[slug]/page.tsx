@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { getGewerke, type Anbieter } from "@/lib/types";
 import { getGewerkeFarbe } from "@/lib/gewerke";
-import PlatzhalterBild from "@/components/PlatzhalterBild";
+import GewerkeBild from "@/components/GewerkeBild";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -69,8 +69,8 @@ export default async function AnbieterDetail({
   // kategorien jedoch ein einzelnes Objekt – daher die Konvertierung über unknown.
   const anbieter = data as unknown as Anbieter;
   const gewerke = getGewerke(anbieter);
-  const farbe = getGewerkeFarbe(gewerke[0]?.slug);
-  const initial = anbieter.name.charAt(0).toUpperCase();
+  const erstesGewerk = gewerke[0];
+  const farbe = getGewerkeFarbe(erstesGewerk?.slug);
   const standort = [anbieter.plz, anbieter.ort].filter(Boolean).join(" ");
 
   return (
@@ -93,7 +93,12 @@ export default async function AnbieterDetail({
         {/* Galerie aus Platzhalter-Bildflächen in Gewerk-Farbe */}
         <div className="mt-6 grid grid-cols-4 grid-rows-2 gap-2 overflow-hidden rounded-2xl sm:h-80">
           <div className="col-span-4 row-span-2 h-48 sm:col-span-2 sm:h-auto">
-            <PlatzhalterBild color={farbe} initial={initial} letterClassName="text-7xl" />
+            <GewerkeBild
+              gewerkeSlug={erstesGewerk?.slug}
+              gewerkeName={erstesGewerk?.name}
+              name={anbieter.name}
+              letterClassName="text-7xl"
+            />
           </div>
           <div className="hidden opacity-90 sm:block" style={{ backgroundColor: farbe }} />
           <div className="hidden opacity-75 sm:block" style={{ backgroundColor: farbe }} />
