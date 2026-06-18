@@ -119,8 +119,78 @@ export default async function AnbieterDetail({
   const farbe = getGewerkeFarbe(erstesGewerk?.slug);
   const standort = [anbieter.plz, anbieter.ort].filter(Boolean).join(" ");
 
+  // Strukturierte Daten (JSON-LD) – wiederverwendet die bereits geladenen Anbieter-
+  // und Gewerk-Werte, kein zusätzlicher Query.
+  const BASE_URL = "https://www.baumarkt-niederrhein.de";
+  const gewerkSlug = erstesGewerk?.slug;
+  const gewerkName = erstesGewerk?.name;
+  const profileUrl = `${BASE_URL}/anbieter/${anbieter.slug}`;
+  // Logo bevorzugt, sonst das Gewerk-Platzhalterbild (gleiche Quelle wie die Anzeige).
+  const imageUrl =
+    anbieter.logo_url ??
+    (gewerkSlug ? `${BASE_URL}/gewerke/${gewerkSlug}.png` : undefined);
+
+  const localBusiness = {
+    "@type": "LocalBusiness",
+    name: anbieter.name,
+    url: profileUrl,
+    ...(imageUrl ? { image: imageUrl } : {}),
+    ...(anbieter.beschreibung ? { description: anbieter.beschreibung } : {}),
+    ...(anbieter.kontakt_telefon ? { telephone: anbieter.kontakt_telefon } : {}),
+    ...(anbieter.kontakt_email ? { email: anbieter.kontakt_email } : {}),
+    ...(anbieter.ort || anbieter.plz
+      ? {
+          address: {
+            "@type": "PostalAddress",
+            ...(anbieter.plz ? { postalCode: anbieter.plz } : {}),
+            ...(anbieter.ort ? { addressLocality: anbieter.ort } : {}),
+            addressRegion: "Niederrhein",
+            addressCountry: "DE",
+          },
+        }
+      : {}),
+    ...(anbieter.einzugsgebiet ? { areaServed: anbieter.einzugsgebiet } : {}),
+  };
+
+  // Breadcrumb: Startseite > Gewerk (Filter) > Anbieter.
+  // Mittleres Element nur, wenn ein Gewerk vorhanden ist.
+  const breadcrumbItems = [
+    { "@type": "ListItem", position: 1, name: "Startseite", item: `${BASE_URL}/` },
+    ...(gewerkSlug && gewerkName
+      ? [
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: gewerkName,
+            item: `${BASE_URL}/?kategorie=${gewerkSlug}`,
+          },
+        ]
+      : []),
+    {
+      "@type": "ListItem",
+      position: gewerkSlug ? 3 : 2,
+      name: anbieter.name,
+      item: profileUrl,
+    },
+  ];
+
+  const breadcrumb = {
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbItems,
+  };
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [localBusiness, breadcrumb],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <Header />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
