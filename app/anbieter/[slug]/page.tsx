@@ -48,7 +48,9 @@ export async function generateMetadata({
       siteName: "Baumarkt Niederrhein",
       title,
       description,
-      ...(anbieter.logo_url ? { images: [anbieter.logo_url] } : {}),
+      // Logo bevorzugt; ohne Logo das siteweite opengraph-image als Fallback,
+      // da ein explizites openGraph das File-Convention-Bild sonst nicht erbt.
+      images: anbieter.logo_url ? [anbieter.logo_url] : ["/opengraph-image"],
     },
   };
 }
