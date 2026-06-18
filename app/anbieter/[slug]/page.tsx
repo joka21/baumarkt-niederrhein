@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
@@ -196,6 +197,36 @@ export default async function AnbieterDetail({
       <Header />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
+        {/* Sichtbare Breadcrumb – spiegelt das JSON-LD BreadcrumbList */}
+        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-stone-500">
+          <ol className="flex flex-wrap items-center gap-1.5">
+            <li>
+              <Link href="/" className="transition-colors hover:text-orange-700">
+                Start
+              </Link>
+            </li>
+            {gewerkSlug && gewerkName && (
+              <>
+                <li aria-hidden="true">›</li>
+                <li>
+                  <Link
+                    href={`/?kategorie=${gewerkSlug}`}
+                    className="transition-colors hover:text-orange-700"
+                  >
+                    {gewerkName}
+                  </Link>
+                </li>
+              </>
+            )}
+            <li aria-hidden="true">›</li>
+            <li>
+              <span aria-current="page" className="text-stone-700">
+                {anbieter.name}
+              </span>
+            </li>
+          </ol>
+        </nav>
+
         {/* Titelzeile */}
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
@@ -215,6 +246,7 @@ export default async function AnbieterDetail({
               gewerkeSlug={erstesGewerk?.slug}
               gewerkeName={erstesGewerk?.name}
               name={anbieter.name}
+              ort={anbieter.ort}
               letterClassName="text-7xl"
             />
           </div>
@@ -238,12 +270,13 @@ export default async function AnbieterDetail({
                 <h3 className="text-base font-semibold text-stone-900">Gewerke</h3>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {gewerke.map((g) => (
-                    <span
+                    <Link
                       key={g.slug}
-                      className="rounded-full border border-stone-300 px-4 py-1.5 text-sm font-medium text-stone-700"
+                      href={`/?kategorie=${g.slug}`}
+                      className="rounded-full border border-stone-300 px-4 py-1.5 text-sm font-medium text-stone-700 transition-colors hover:border-stone-900 hover:text-stone-900"
                     >
                       {g.name}
-                    </span>
+                    </Link>
                   ))}
                 </div>
               </div>

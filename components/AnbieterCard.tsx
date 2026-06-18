@@ -28,6 +28,7 @@ export default function AnbieterCard({ anbieter }: { anbieter: Anbieter }) {
           gewerkeSlug={erstesGewerk?.slug}
           gewerkeName={erstesGewerk?.name}
           name={anbieter.name}
+          ort={anbieter.ort}
           className="transition-transform duration-300 group-hover:scale-105"
           letterClassName="text-6xl"
         />

@@ -61,6 +61,14 @@ export default async function Home({
       )
     : alleAnbieter;
 
+  // H1-Text konsistent mit der generateMetadata-Logik (Slug kapitalisiert).
+  const gewerkLabel = kategorie
+    ? kategorie.charAt(0).toUpperCase() + kategorie.slice(1)
+    : null;
+  const h1Text = gewerkLabel
+    ? `${gewerkLabel} am Niederrhein finden`
+    : "Handwerk & Material am Niederrhein finden";
+
   // Siteweites Marken-Schema (Organization + WebSite) mit stabilen @id-Ankern,
   // damit spaetere Artikel via publisher/isPartOf darauf verweisen koennen.
   const BASE_URL = "https://www.baumarkt-niederrhein.de";
@@ -101,17 +109,30 @@ export default async function Home({
       <CategoryBar kategorien={kategorien} activeSlug={kategorie} />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6">
-        {anbieter.length === 0 ? (
-          <p className="py-16 text-center text-stone-500">
-            Für dieses Gewerk sind aktuell keine Anbieter verfügbar.
+        {/* Hero mit genau einer H1 (lokales Keyword) */}
+        <div className="pb-6 sm:pb-8">
+          <h1 className="text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
+            {h1Text}
+          </h1>
+          <p className="mt-2 text-stone-600">
+            Geprüfte Handwerker und Händler aus Ihrer Region.
           </p>
-        ) : (
-          <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {anbieter.map((a) => (
-              <AnbieterCard key={a.id} anbieter={a} />
-            ))}
-          </div>
-        )}
+        </div>
+
+        <section aria-label="Anbieter">
+          <h2 className="sr-only">Anbieter</h2>
+          {anbieter.length === 0 ? (
+            <p className="py-16 text-center text-stone-500">
+              Für dieses Gewerk sind aktuell keine Anbieter verfügbar.
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+              {anbieter.map((a) => (
+                <AnbieterCard key={a.id} anbieter={a} />
+              ))}
+            </div>
+          )}
+        </section>
       </main>
 
       <Footer />
