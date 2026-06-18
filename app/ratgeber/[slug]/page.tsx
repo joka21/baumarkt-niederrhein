@@ -243,15 +243,12 @@ export default async function ArtikelSeite({
           </div>
 
           {artikel.kategorie_slug && gewerkLabel && (
-            <div className="mt-12 rounded-2xl border border-stone-200 bg-stone-50 p-6 text-center">
-              <p className="font-semibold text-stone-900">
-                Passende Anbieter am Niederrhein gesucht?
-              </p>
+            <div className="mt-12 rounded-2xl border border-stone-200 bg-stone-50 p-6">
               <Link
                 href={`/?kategorie=${artikel.kategorie_slug}`}
-                className="mt-4 inline-block rounded-full bg-orange-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-orange-700"
+                className="font-semibold text-orange-700 transition-colors hover:text-orange-800"
               >
-                {gewerkLabel} in Ihrer Region finden
+                Passende Betriebe am Niederrhein: alle {gewerkLabel} ansehen →
               </Link>
             </div>
           )}

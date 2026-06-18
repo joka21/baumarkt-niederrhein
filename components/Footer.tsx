@@ -5,7 +5,7 @@ const gruppen = [
     titel: "Service",
     links: [
       { label: "Anbieter finden", href: "/" },
-      { label: "Hilfe-Center", href: "/" },
+      { label: "Ratgeber", href: "/ratgeber" },
       { label: "Kontakt", href: "/" },
     ],
   },
