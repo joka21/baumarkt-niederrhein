@@ -125,6 +125,12 @@ export default function Header() {
         {/* Rechte Aktionen */}
         <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           <Link
+            href="/ratgeber"
+            className="hidden rounded-full px-4 py-2 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100 lg:inline-block"
+          >
+            Ratgeber
+          </Link>
+          <Link
             href="/fuer-anbieter"
             className="hidden rounded-full px-4 py-2 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100 lg:inline-block"
           >
@@ -182,6 +188,14 @@ export default function Header() {
                     Registrieren
                   </button>
                   <div className="my-2 h-px bg-stone-200" />
+                  <Link
+                    href="/ratgeber"
+                    role="menuitem"
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50"
+                  >
+                    Ratgeber
+                  </Link>
                   <Link
                     href="/fuer-anbieter"
                     role="menuitem"

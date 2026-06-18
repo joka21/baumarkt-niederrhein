@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { notFound } from "next/navigation";
@@ -116,7 +117,7 @@ export default async function ArtikelSeite({
   const { data: artikel } = await supabase
     .from("artikel")
     .select(
-      "titel, auszug, inhalt, cover_url, autor, kategorie_slug, veroeffentlicht_am"
+      "titel, auszug, inhalt, cover_url, autor, kategorie_slug, veroeffentlicht_am, aktualisiert_am"
     )
     .eq("slug", slug)
     .eq("status", "veroeffentlicht")
@@ -127,11 +128,88 @@ export default async function ArtikelSeite({
   const datum = formatDatum(artikel.veroeffentlicht_am);
   const metaZeile = [artikel.autor, datum].filter(Boolean).join(" · ");
 
+  // Interne Verlinkung zum passenden Gewerk-Filter (Label = Slug kapitalisiert,
+  // gleiche Logik wie auf der Startseite).
+  const gewerkLabel = artikel.kategorie_slug
+    ? artikel.kategorie_slug.charAt(0).toUpperCase() +
+      artikel.kategorie_slug.slice(1)
+    : null;
+
+  // Strukturierte Daten (BlogPosting + BreadcrumbList) – wiederverwendet das
+  // bereits geladene artikel, kein zusaetzlicher Query.
+  const BASE_URL = "https://www.baumarkt-niederrhein.de";
+  const articleUrl = `${BASE_URL}/ratgeber/${slug}`;
+  const articleImage = artikel.cover_url ?? `${BASE_URL}/opengraph-image`;
+
+  const blogPosting = {
+    "@type": "BlogPosting",
+    headline: artikel.titel,
+    url: articleUrl,
+    mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
+    image: articleImage,
+    inLanguage: "de-DE",
+    isPartOf: { "@id": `${BASE_URL}/#website` },
+    publisher: { "@id": `${BASE_URL}/#organization` },
+    author: { "@type": "Organization", name: artikel.autor },
+    ...(artikel.auszug ? { description: artikel.auszug } : {}),
+    ...(artikel.veroeffentlicht_am
+      ? { datePublished: artikel.veroeffentlicht_am }
+      : {}),
+    ...(artikel.aktualisiert_am
+      ? { dateModified: artikel.aktualisiert_am }
+      : {}),
+  };
+
+  const breadcrumb = {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Startseite", item: `${BASE_URL}/` },
+      { "@type": "ListItem", position: 2, name: "Ratgeber", item: `${BASE_URL}/ratgeber` },
+      { "@type": "ListItem", position: 3, name: artikel.titel, item: articleUrl },
+    ],
+  };
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [blogPosting, breadcrumb],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <Header />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6">
+        {/* Sichtbare Breadcrumb – spiegelt das JSON-LD BreadcrumbList */}
+        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-stone-500">
+          <ol className="flex flex-wrap items-center gap-1.5">
+            <li>
+              <Link href="/" className="transition-colors hover:text-orange-700">
+                Start
+              </Link>
+            </li>
+            <li aria-hidden="true">›</li>
+            <li>
+              <Link
+                href="/ratgeber"
+                className="transition-colors hover:text-orange-700"
+              >
+                Ratgeber
+              </Link>
+            </li>
+            <li aria-hidden="true">›</li>
+            <li>
+              <span aria-current="page" className="text-stone-700">
+                {artikel.titel}
+              </span>
+            </li>
+          </ol>
+        </nav>
+
         <article>
           {artikel.cover_url && (
             <div className="mb-8 overflow-hidden rounded-2xl bg-stone-100">
@@ -163,6 +241,20 @@ export default async function ArtikelSeite({
               {artikel.inhalt}
             </ReactMarkdown>
           </div>
+
+          {artikel.kategorie_slug && gewerkLabel && (
+            <div className="mt-12 rounded-2xl border border-stone-200 bg-stone-50 p-6 text-center">
+              <p className="font-semibold text-stone-900">
+                Passende Anbieter am Niederrhein gesucht?
+              </p>
+              <Link
+                href={`/?kategorie=${artikel.kategorie_slug}`}
+                className="mt-4 inline-block rounded-full bg-orange-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-orange-700"
+              >
+                {gewerkLabel} in Ihrer Region finden
+              </Link>
+            </div>
+          )}
         </article>
       </main>
 
