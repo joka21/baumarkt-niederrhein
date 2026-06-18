@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { getGewerke, type Anbieter, type Kategorie } from "@/lib/types";
@@ -5,6 +6,25 @@ import Header from "@/components/Header";
 import CategoryBar from "@/components/CategoryBar";
 import AnbieterCard from "@/components/AnbieterCard";
 import Footer from "@/components/Footer";
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ kategorie?: string }>;
+}): Promise<Metadata> {
+  const { kategorie } = await searchParams;
+  if (!kategorie) return {}; // erbt Default-Metadata aus layout.tsx
+
+  // lib/gewerke.ts führt nur Platzhalterfarben, kein Label-Feld – daher Slug kapitalisieren.
+  const label = kategorie.charAt(0).toUpperCase() + kategorie.slice(1);
+
+  const title = `${label} am Niederrhein finden`;
+  return {
+    title,
+    description: `${label} aus der Region Niederrhein – geprüfte Anbieter mit Profil, Leistungen und Kontakt auf Baumarkt Niederrhein.`,
+    alternates: { canonical: `/?kategorie=${kategorie}` },
+  };
+}
 
 export default async function Home({
   searchParams,

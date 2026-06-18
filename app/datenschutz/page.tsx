@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "Datenschutz",
+  description: "Datenschutzerklärung von Baumarkt Niederrhein.",
+  alternates: { canonical: "/datenschutz" },
+};
 
 export default function Datenschutz() {
   return (

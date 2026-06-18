@@ -8,16 +8,23 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://baumarkt-niederrhein.de"),
-  title: "Baumarkt Niederrhein – Handwerk & Material vom Niederrhein",
+  metadataBase: new URL("https://www.baumarkt-niederrhein.de"),
+  title: {
+    default: "Baumarkt Niederrhein – Handwerker & Material am Niederrhein",
+    template: "%s | Baumarkt Niederrhein",
+  },
   description:
-    "Der regionale Marktplatz für Handwerk und Material am Niederrhein. Geprüfte Handwerker und Händler aus Ihrer Region – mit Profil, Leistungen und Shop.",
+    "Baumarkt Niederrhein – geprüfte Handwerker und Händler aus der Region. Finden Sie Anbieter für Bodenleger, Maler, Fliesenleger, Sanitär, Elektro und mehr am Niederrhein.",
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "Baumarkt Niederrhein – Handwerk & Material vom Niederrhein",
-    description:
-      "Der regionale Marktplatz für Handwerk und Material am Niederrhein. Geprüfte Handwerker und Händler aus Ihrer Region – mit Profil, Leistungen und Shop.",
-    locale: "de_DE",
     type: "website",
+    locale: "de_DE",
+    url: "/",
+    siteName: "Baumarkt Niederrhein",
+    title: "Baumarkt Niederrhein – Handwerker & Material am Niederrhein",
+    description:
+      "Geprüfte Handwerker und Händler aus der Region Niederrhein – mit Profil, Leistungen und Kontakt.",
+    // TODO Block D: Standard-OG-Bild (opengraph-image) ergänzen
   },
 };
 

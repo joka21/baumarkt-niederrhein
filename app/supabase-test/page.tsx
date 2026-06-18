@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function SupabaseTestPage() {
   const cookieStore = await cookies();

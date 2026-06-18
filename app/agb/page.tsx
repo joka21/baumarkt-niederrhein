@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "AGB",
+  description: "Allgemeine Geschäftsbedingungen von Baumarkt Niederrhein.",
+  alternates: { canonical: "/agb" },
+};
 
 export default function AGB() {
   return (

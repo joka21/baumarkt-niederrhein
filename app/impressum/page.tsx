@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "Impressum",
+  description: "Impressum und Anbieterkennzeichnung von Baumarkt Niederrhein.",
+  alternates: { canonical: "/impressum" },
+};
 
 export default function Impressum() {
   return (

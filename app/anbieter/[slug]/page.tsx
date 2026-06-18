@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
@@ -6,6 +7,51 @@ import { getGewerkeFarbe } from "@/lib/gewerke";
 import GewerkeBild from "@/components/GewerkeBild";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data } = await supabase
+    .from("anbieter")
+    .select(
+      "name, beschreibung, ort, logo_url, anbieter_kategorien(kategorien(name, slug))"
+    )
+    .eq("slug", slug)
+    .eq("status", "aktiv")
+    .maybeSingle();
+
+  if (!data) return { title: "Anbieter nicht gefunden" };
+
+  const anbieter = data as unknown as Anbieter;
+  const gewerk = getGewerke(anbieter)[0]?.name ?? "Handwerk";
+
+  const title = `${anbieter.name} – ${gewerk} in ${anbieter.ort}`;
+  const description = anbieter.beschreibung
+    ? anbieter.beschreibung.slice(0, 155)
+    : `${anbieter.name}: ${gewerk} aus ${anbieter.ort} am Niederrhein. Profil, Leistungen und Kontakt auf Baumarkt Niederrhein.`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/anbieter/${slug}` },
+    openGraph: {
+      type: "website",
+      locale: "de_DE",
+      url: `/anbieter/${slug}`,
+      siteName: "Baumarkt Niederrhein",
+      title,
+      description,
+      ...(anbieter.logo_url ? { images: [anbieter.logo_url] } : {}),
+    },
+  };
+}
 
 function MailIcon({ className = "" }: { className?: string }) {
   return (

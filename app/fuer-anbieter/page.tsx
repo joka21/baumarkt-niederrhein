@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "Für Anbieter – am Niederrhein gefunden werden",
+  description:
+    "Werden Sie Teil von Baumarkt Niederrhein: Präsentieren Sie Ihr Gewerk mit Profil, Leistungen und Kontakt und gewinnen Sie neue Kunden aus der Region.",
+  alternates: { canonical: "/fuer-anbieter" },
+};
 
 const vorteile = [
   {
