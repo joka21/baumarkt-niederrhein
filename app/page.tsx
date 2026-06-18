@@ -61,8 +61,42 @@ export default async function Home({
       )
     : alleAnbieter;
 
+  // Siteweites Marken-Schema (Organization + WebSite) mit stabilen @id-Ankern,
+  // damit spaetere Artikel via publisher/isPartOf darauf verweisen koennen.
+  const BASE_URL = "https://www.baumarkt-niederrhein.de";
+
+  const organization = {
+    "@type": "Organization",
+    "@id": `${BASE_URL}/#organization`,
+    name: "Baumarkt Niederrhein",
+    url: `${BASE_URL}/`,
+    description:
+      "Regionaler Online-Marktplatz für Handwerk und Material am Niederrhein.",
+    areaServed: "Niederrhein",
+    // TODO Block D: logo: `${BASE_URL}/logo.png` ergänzen, sobald Logo-Asset existiert
+  };
+
+  const website = {
+    "@type": "WebSite",
+    "@id": `${BASE_URL}/#website`,
+    url: `${BASE_URL}/`,
+    name: "Baumarkt Niederrhein",
+    inLanguage: "de-DE",
+    publisher: { "@id": `${BASE_URL}/#organization` },
+  };
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [organization, website],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <Header />
       <CategoryBar kategorien={kategorien} activeSlug={kategorie} />
 
