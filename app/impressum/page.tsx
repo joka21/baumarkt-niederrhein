@@ -5,11 +5,12 @@ import { KONTAKT_EMAIL, KONTAKT_TELEFON } from "@/lib/kontakt";
 
 export const metadata: Metadata = {
   title: "Impressum",
-  description: "Impressum und Anbieterkennzeichnung von Baumarkt Niederrhein.",
+  description:
+    "Impressum von Baumarkt Niederrhein: Anbieterkennzeichnung, Kontakt, Umsatzsteuer-ID und redaktionell Verantwortlicher des Ratgebers vom Niederrhein.",
   alternates: { canonical: "/impressum" },
 };
 
-const LINK = "text-primary underline underline-offset-2 hover:opacity-80";
+const LINK = "text-primary-strong underline underline-offset-2 hover:opacity-80";
 
 export default function Impressum() {
   return (
@@ -66,7 +67,7 @@ export default function Impressum() {
           Verbraucherschlichtungsstelle teilzunehmen.
         </p>
 
-        <p className="mt-10 text-body-sm text-text-muted">
+        <p className="mt-10 text-body-sm text-text-muted-strong">
           Quelle:{" "}
           <a href="https://www.e-recht24.de/impressum-generator.html" className={LINK}>
             e-recht24.de

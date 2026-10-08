@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Libre_Franklin, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
@@ -18,6 +18,11 @@ const sourceSans = Source_Sans_3({
   display: "swap",
 });
 
+// Kein Canonical im Layout: jede Seite setzt ihren eigenen, 404-Seiten keinen.
+export const viewport: Viewport = {
+  themeColor: "#047857",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.baumarkt-niederrhein.de"),
   title: {
@@ -26,7 +31,6 @@ export const metadata: Metadata = {
   },
   description:
     "Sechs Tiere vom Niederrhein schreiben über Bauen, Renovieren und Handwerk. Mit Ratgebern, Kostenübersichten und den Baumärkten in deiner Stadt.",
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "de_DE",

@@ -7,8 +7,11 @@ import { autorAltText, type Autor } from "@/lib/autoren";
 export default function TeamKarte({
   autor,
   ueberschrift: Ueberschrift = "h2",
+  preload = false,
 }: {
   autor: Autor;
+  /** Für die erste sichtbare Karte: Bild bevorzugt laden (größtes Element). */
+  preload?: boolean;
   /** Überschriften-Ebene passend zur Seitengliederung. */
   ueberschrift?: "h2" | "h3";
 }) {
@@ -19,19 +22,20 @@ export default function TeamKarte({
           src={autor.bild}
           alt={autorAltText(autor)}
           fill
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          preload={preload}
+          sizes="(min-width: 1280px) 400px, (min-width: 1024px) 31vw, (min-width: 640px) 47vw, 92vw"
           className="object-cover"
         />
       </div>
 
       <div className="flex flex-1 flex-col items-start gap-3 p-6">
         <Ueberschrift className="text-h4 text-text">
-          <Link href={`/team/${autor.slug}`} className="hover:text-primary">
+          <Link href={`/team/${autor.slug}`} className="hover:text-primary-strong">
             {autor.name}, {autor.tier} aus {autor.ort}
           </Link>
         </Ueberschrift>
 
-        <p className="text-body-sm leading-snug text-text-muted">{autor.rolle}</p>
+        <p className="text-body-sm leading-snug text-text-muted-strong">{autor.rolle}</p>
 
         <ul className="flex flex-col gap-1.5">
           {autor.themen.map((thema) => (
@@ -39,7 +43,7 @@ export default function TeamKarte({
               <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-secondary">
                 <Image src="/icons/check.svg" alt="" width={12} height={12} />
               </span>
-              <span className="text-body-sm text-text-muted">{thema}</span>
+              <span className="text-body-sm text-text-muted-strong">{thema}</span>
             </li>
           ))}
         </ul>
@@ -48,7 +52,7 @@ export default function TeamKarte({
 
         <Link
           href={`/team/${autor.slug}`}
-          className="mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-button text-surface transition-opacity hover:opacity-90"
+          className="mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-primary-strong px-7 py-3.5 text-button text-surface transition-opacity hover:opacity-90"
         >
           Mehr über {autor.name}
           <Image src="/icons/arrow-right.svg" alt="" width={16} height={16} />

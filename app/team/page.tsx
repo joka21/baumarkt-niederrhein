@@ -3,11 +3,12 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TeamKarte from "@/components/TeamKarte";
 import { AUTOREN } from "@/lib/autoren";
+import { mailtoLink } from "@/lib/kontakt";
 
 export const metadata: Metadata = {
   title: "Unser Team",
   description:
-    "Sechs Tiere vom Niederrhein, sechs Meinungen: Steinkauz, Biberin, Fuchs, Feldhase, Kiebitz und Blässgans schreiben über Bauen, Renovieren und Handwerk in der Region.",
+    "Sechs Tiere vom Niederrhein, sechs Meinungen: Steinkauz, Biberin, Fuchs, Feldhase, Kiebitz und Blässgans schreiben über Bauen und Renovieren.",
   alternates: { canonical: "/team" },
 };
 
@@ -45,9 +46,9 @@ export default function TeamSeite() {
 
         <section aria-label="Team-Mitglieder" className="mt-12">
           <ul className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-            {AUTOREN.map((autor) => (
+            {AUTOREN.map((autor, i) => (
               <li key={autor.slug}>
-                <TeamKarte autor={autor} />
+                <TeamKarte autor={autor} preload={i === 0} />
               </li>
             ))}
           </ul>
@@ -58,7 +59,13 @@ export default function TeamSeite() {
             Dir fehlt ein Thema?
           </h2>
           <p className="mt-3 leading-relaxed text-text">
-            Schreib uns, welche Frage wir als Nächstes beantworten sollen.
+            <a
+              href={mailtoLink("Themenwunsch")}
+              className="text-primary-strong underline underline-offset-2 hover:opacity-80"
+            >
+              Schreib uns
+            </a>
+            , welche Frage wir als Nächstes beantworten sollen.
           </p>
         </section>
       </main>

@@ -6,7 +6,8 @@ import { KONTAKT_EMAIL } from "@/lib/kontakt";
 
 export const metadata: Metadata = {
   title: "Datenschutzerklärung",
-  description: "Datenschutzerklärung von Baumarkt Niederrhein.",
+  description:
+    "Datenschutzerklärung von Baumarkt Niederrhein: welche Daten beim Besuch der Website und bei Kontakt per E-Mail verarbeitet werden und welche Rechte gelten.",
   alternates: { canonical: "/datenschutz" },
 };
 
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 // OFFEN: Konkrete Angaben zu Vercel (Hosting) und Supabase (Datenbank) fehlen
 // noch und sollten über den Generator ergänzt werden.
 
-const LINK = "text-primary underline underline-offset-2 hover:opacity-80";
+const LINK = "text-primary-strong underline underline-offset-2 hover:opacity-80";
 
 function Liste({ punkte }: { punkte: string[] }) {
   return (
@@ -607,7 +608,7 @@ export default function Datenschutz() {
           </section>
         ))}
 
-        <p className="mt-12 text-body-sm text-text-muted">
+        <p className="mt-12 text-body-sm text-text-muted-strong">
           <a href="https://datenschutz-generator.de/" className={LINK} rel="noopener noreferrer nofollow">
             Erstellt mit kostenlosem Datenschutz-Generator.de von Dr. Thomas Schwenke
           </a>

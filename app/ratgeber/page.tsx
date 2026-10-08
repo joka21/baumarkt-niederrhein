@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
+import { supabasePublic } from "@/utils/supabase/public";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+// Statisch erzeugt, stündlich aktualisiert (ISR).
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
-  title: "Ratgeber – Tipps rund um Handwerk & Material am Niederrhein",
+  title: "Ratgeber für Bauen und Renovieren",
   description:
-    "Praktische Ratgeber-Artikel zu Handwerk, Material und Renovierung am Niederrhein.",
+    "Ratgeber für Bauen, Renovieren und Handwerk am Niederrhein: Böden, Fliesen, Kosten und Handwerkersuche, erklärt von sechs Tieren aus der Region.",
   alternates: { canonical: "/ratgeber" },
 };
 
@@ -29,7 +32,7 @@ type ArtikelKarte = {
 };
 
 export default async function RatgeberUebersicht() {
-  const supabase = createClient(await cookies());
+  const supabase = supabasePublic;
 
   const { data } = await supabase
     .from("artikel")
@@ -72,15 +75,16 @@ export default async function RatgeberUebersicht() {
                   >
                     <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-surface">
                       {a.cover_url ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
+                        <Image
                           src={a.cover_url}
                           alt={a.titel}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          fill
+                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          className="object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       ) : (
                         <div
-                          className="flex h-full w-full items-center justify-center bg-primary"
+                          className="flex h-full w-full items-center justify-center bg-primary-strong"
                           aria-hidden="true"
                         >
                           <span className="text-4xl font-bold text-surface/90">
@@ -92,9 +96,9 @@ export default async function RatgeberUebersicht() {
 
                     <div className="mt-3">
                       {datum && (
-                        <p className="text-xs font-medium text-text-muted">{datum}</p>
+                        <p className="text-xs font-medium text-text-muted-strong">{datum}</p>
                       )}
-                      <h3 className="mt-1 text-text group-hover:text-primary">
+                      <h3 className="mt-1 text-text group-hover:text-primary-strong">
                         {a.titel}
                       </h3>
                       {a.auszug && (

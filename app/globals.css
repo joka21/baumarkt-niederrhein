@@ -9,11 +9,13 @@
 /* Design-Tokens aus Figma "Bodenbeläge Niederrhein" – verbindlicher Standard */
 @theme {
   /* Farben → bg-primary, text-text-muted, border-stroke, … */
-  --color-primary: #059669; /* Buttons, Links, Icons, Akzente */
+  --color-primary: #059669; /* Icons, Flächen ohne Text, dunkle Fußzeile */
+  --color-primary-strong: #047857; /* Text, Links, Buttons, Logo – 5,48:1 auf Weiß */
   --color-surface: #ffffff; /* Flächen */
   --color-dark-surface: #1f1b18; /* dunkle Flächen */
   --color-text: #1f1b18; /* Überschriften und Fließtext */
-  --color-text-muted: #998f85; /* nur kurze Zusatzangaben, nie Fließtext */
+  --color-text-muted: #998f85; /* nur auf dunklen Flächen (Fußzeile) */
+  --color-text-muted-strong: #7a7067; /* Zusatzangaben auf Weiß – 4,9:1; nie Fließtext */
   --color-stroke: #e5e7eb; /* Rahmen und Trennlinien */
   --color-secondary: #ddfce6; /* Knoten 75:568 (Check-Kreis) */
   --color-text-on-secondary: #27500a;

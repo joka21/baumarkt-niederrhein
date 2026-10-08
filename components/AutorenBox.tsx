@@ -28,7 +28,7 @@ export default function AutorenBox({ autoren }: { autoren: Autor[] }) {
               </p>
               <Link
                 href={`/team/${autor.slug}`}
-                className="mt-1 inline-block text-sm font-medium text-primary transition-colors hover:opacity-80"
+                className="mt-1 inline-block text-sm font-medium text-primary-strong transition-colors hover:opacity-80"
               >
                 Mehr über {autor.name} →
               </Link>

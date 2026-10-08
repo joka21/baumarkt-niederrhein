@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
+import { supabasePublic } from "@/utils/supabase/public";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TeamKarte from "@/components/TeamKarte";
@@ -14,6 +13,9 @@ import {
   type Autor,
 } from "@/lib/autoren";
 import { getLiveStaedte } from "@/lib/staedte";
+
+// Statisch erzeugt, stündlich aktualisiert (ISR).
+export const revalidate = 3600;
 
 const TITEL = "Baumarkt Niederrhein: Ratgeber für Bauen und Renovieren";
 const BESCHREIBUNG =
@@ -42,10 +44,10 @@ type ArtikelZeile = {
 };
 
 const BUTTON_PRIMAER =
-  "inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-button text-surface transition-opacity hover:opacity-90";
+  "inline-flex items-center justify-center gap-2 rounded-full bg-primary-strong px-7 py-3.5 text-button text-surface transition-opacity hover:opacity-90";
 const BUTTON_SEKUNDAER =
-  "inline-flex items-center justify-center gap-2 rounded-full border border-primary px-7 py-3.5 text-button text-primary transition-opacity hover:opacity-80";
-const TEXTLINK = "text-button text-primary transition-opacity hover:opacity-80";
+  "inline-flex items-center justify-center gap-2 rounded-full border border-primary-strong px-7 py-3.5 text-button text-primary-strong transition-opacity hover:opacity-80";
+const TEXTLINK = "text-button text-primary-strong transition-opacity hover:opacity-80";
 
 // Kleines quadratisches Autorenbild; ohne Team-Zuordnung das Redaktions-Kürzel.
 function AutorBild({ autor, groesse }: { autor?: Autor; groesse: number }) {
@@ -54,7 +56,7 @@ function AutorBild({ autor, groesse }: { autor?: Autor; groesse: number }) {
       <span
         aria-hidden="true"
         style={{ width: groesse, height: groesse }}
-        className="flex shrink-0 items-center justify-center rounded-lg bg-primary text-body-sm font-bold text-surface"
+        className="flex shrink-0 items-center justify-center rounded-lg bg-primary-strong text-body-sm font-bold text-surface"
       >
         BN
       </span>
@@ -72,7 +74,7 @@ function AutorBild({ autor, groesse }: { autor?: Autor; groesse: number }) {
 }
 
 export default async function Home() {
-  const supabase = createClient(await cookies());
+  const supabase = supabasePublic;
 
   const [{ data: artikelData }, { data: kategorienData }] = await Promise.all([
     supabase
@@ -155,7 +157,7 @@ export default async function Home() {
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <span className="mt-2 block text-center text-body-sm text-text group-hover:text-primary">
+                  <span className="mt-2 block text-center text-body-sm text-text group-hover:text-primary-strong">
                     {autor.name}
                   </span>
                 </Link>
@@ -188,7 +190,7 @@ export default async function Home() {
                 <li key={stadt.slug}>
                   <Link
                     href={`/baumaerkte/${stadt.slug}`}
-                    className="flex h-full items-center justify-between gap-2 rounded-2xl border border-stroke p-5 text-text transition-colors hover:border-primary hover:text-primary"
+                    className="flex h-full items-center justify-between gap-2 rounded-2xl border border-stroke p-5 text-text transition-colors hover:border-primary-strong hover:text-primary-strong"
                   >
                     <span className="font-bold">{stadt.name}</span>
                     <span aria-hidden="true">→</span>
@@ -238,10 +240,10 @@ export default async function Home() {
                   <li key={a.slug}>
                     <Link
                       href={`/ratgeber/${a.slug}`}
-                      className="group flex h-full flex-col rounded-2xl border border-stroke p-6 transition-colors hover:border-primary"
+                      className="group flex h-full flex-col rounded-2xl border border-stroke p-6 transition-colors hover:border-primary-strong"
                     >
-                      {thema && <p className="text-body-sm text-text-muted">{thema}</p>}
-                      <h3 className="mt-2 text-h5 group-hover:text-primary">{a.titel}</h3>
+                      {thema && <p className="text-body-sm text-text-muted-strong">{thema}</p>}
+                      <h3 className="mt-2 text-h5 group-hover:text-primary-strong">{a.titel}</h3>
                       <div className="mt-auto flex items-center gap-3 pt-6">
                         <AutorBild autor={a.autoren[0]} groesse={40} />
                         <span className="text-body-sm text-text">{autorenNamen(a.autoren)}</span>

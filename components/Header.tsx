@@ -50,7 +50,7 @@ export default function Header() {
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-body-sm font-bold text-surface">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-strong text-body-sm font-bold text-surface">
             BN
           </span>
           <span className="text-lg font-bold text-text">Baumarkt Niederrhein</span>
@@ -63,7 +63,7 @@ export default function Header() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="rounded-full px-4 py-2 text-nav text-text transition-colors hover:text-primary"
+                  className="rounded-full px-4 py-2 text-nav text-text transition-colors hover:text-primary-strong"
                 >
                   {link.label}
                 </Link>
@@ -93,7 +93,7 @@ export default function Header() {
                 <Link
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="block py-3 text-nav text-text hover:text-primary"
+                  className="block py-3 text-nav text-text hover:text-primary-strong"
                 >
                   {link.label}
                 </Link>

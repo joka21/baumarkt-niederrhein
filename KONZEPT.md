@@ -25,8 +25,9 @@ Karten-Raster auf der Startseite, Gewerk-Filterleiste, ausführliche Detailseite
 | Hosting        | Vercel                                       |
 
 ### Next.js 16 Besonderheit
-Middleware heißt in Next.js 16 **Proxy** (`proxy.ts` im Root). Sie refresht bei
-jedem Request die Supabase-Auth-Session, damit die Cookies gültig bleiben.
+Es gibt keine Middleware/Proxy und keine Anmeldung. Öffentliche Daten werden ohne
+Cookies geladen, damit die Seiten statisch erzeugt und per ISR (stündlich) aktualisiert
+werden können.
 
 ## 3. Seitenstruktur (App Router)
 
@@ -35,7 +36,6 @@ jedem Request die Supabase-Auth-Session, damit die Cookies gültig bleiben.
 | `/`                    | dynamisch| Startseite: Anbieter-Raster + Gewerk-Filter         |
 | `/anbieter/[slug]`     | dynamisch| Detailseite eines Anbieters (Profil, Kontakt)       |
 | `/fuer-anbieter`       | statisch | Werbeseite für neue Anbieter (Vorteile, CTA)        |
-| `/supabase-test`       | dynamisch| Test-/Debug-Seite für die Supabase-Verbindung       |
 | `/impressum`           | statisch | Rechtstext                                          |
 | `/datenschutz`         | statisch | Rechtstext                                          |
 | `/agb`                 | statisch | Rechtstext                                          |
@@ -74,9 +74,7 @@ dachdecker · garten · material — jeweils mit eigener Platzhalterfarbe, Fallb
 
 ## 6. Supabase-Anbindung
 
-- **`utils/supabase/server.ts`** – Server-Client für Server Components (Cookies)
-- **`utils/supabase/client.ts`** – Browser-Client
-- **`utils/supabase/proxy.ts`** – Session-Refresh in der Proxy/Middleware
+- **`utils/supabase/public.ts`** – Zugang für öffentliche Daten, ohne Cookies und Sitzung
 
 Konfiguration über Umgebungsvariablen:
 ```
@@ -87,8 +85,8 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 ## 7. Offene Punkte / Bekannte Themen
 
 - **Vercel-Env-Variablen:** `.env*` ist per `.gitignore` ausgeschlossen. Die
-  Supabase-Variablen müssen im Vercel-Dashboard gesetzt sein, sonst crasht die
-  Seite (Proxy ruft bei jedem Request `auth.getUser()` auf).
+  Supabase-Variablen müssen im Vercel-Dashboard gesetzt sein, sonst schlagen Build
+  und ISR-Aktualisierung fehl.
 - **Leere Startseite ("Für dieses Gewerk sind aktuell keine Anbieter verfügbar"):**
   Tritt auf, wenn die Supabase-Query keine Daten liefert. Mögliche Ursachen:
   keine `aktiv`-Anbieter in der DB oder **RLS-Policies** verhindern den

@@ -50,8 +50,8 @@ export default function CategoryBar({ kategorien, activeSlug }: CategoryBarProps
                 href={eintrag.href}
                 className={`group flex shrink-0 flex-col items-center gap-1 border-b-2 pb-1 text-sm font-medium transition-colors ${
                   aktiv
-                    ? "border-primary text-text"
-                    : "border-transparent text-text-muted hover:border-stroke hover:text-text"
+                    ? "border-primary-strong text-text"
+                    : "border-transparent text-text-muted-strong hover:border-stroke hover:text-text"
                 }`}
               >
                 {eintrag.name}

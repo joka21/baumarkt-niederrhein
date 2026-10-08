@@ -23,7 +23,7 @@ export default function FuerBetriebe() {
       <Header />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:px-6 md:py-16">
-        <p className="text-body-sm font-bold uppercase tracking-wide text-primary">
+        <p className="text-body-sm font-bold uppercase tracking-wide text-primary-strong">
           Für Betriebe
         </p>
         <h1 className="mt-4">Dein Betrieb auf Baumarkt Niederrhein</h1>
@@ -38,7 +38,7 @@ export default function FuerBetriebe() {
         </p>
         <a
           href={mailtoLink("Betrieb vormerken")}
-          className="mt-8 inline-flex items-center justify-center rounded-full bg-primary px-7 py-3.5 text-button text-surface transition-opacity hover:opacity-90"
+          className="mt-8 inline-flex items-center justify-center rounded-full bg-primary-strong px-7 py-3.5 text-button text-surface transition-opacity hover:opacity-90"
         >
           Betrieb vormerken
         </a>

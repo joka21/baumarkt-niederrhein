@@ -15,7 +15,7 @@ export default function Footer() {
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-12 sm:px-6 md:flex-row md:items-start md:justify-between">
         <div>
           <Link href="/" className="flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-body-sm font-bold text-surface">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-strong text-body-sm font-bold text-surface">
               BN
             </span>
             <span className="text-lg font-bold">Baumarkt Niederrhein</span>

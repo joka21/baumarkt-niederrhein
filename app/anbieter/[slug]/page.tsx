@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
+import { supabasePublic } from "@/utils/supabase/public";
 import { getGewerke, type Anbieter } from "@/lib/types";
 import { getGewerkeFarbe } from "@/lib/gewerke";
 import GewerkeBild from "@/components/GewerkeBild";
@@ -16,8 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
 
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = supabasePublic;
 
   const { data } = await supabase
     .from("anbieter")
@@ -100,8 +98,7 @@ export default async function AnbieterDetail({
 }) {
   const { slug } = await params;
 
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = supabasePublic;
 
   const { data } = await supabase
     .from("anbieter")
@@ -200,11 +197,11 @@ export default async function AnbieterDetail({
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
         {/* Sichtbare Breadcrumb – spiegelt das JSON-LD BreadcrumbList */}
-        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-text-muted">
+        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-text-muted-strong">
           <ol className="flex flex-wrap items-center gap-1.5">
             <li>
-              <Link href="/" className="transition-colors hover:text-primary">
-                Start
+              <Link href="/" className="transition-colors hover:text-primary-strong">
+                Startseite
               </Link>
             </li>
             {gewerkSlug && gewerkName && (
@@ -213,7 +210,7 @@ export default async function AnbieterDetail({
                 <li>
                   <Link
                     href={`/?kategorie=${gewerkSlug}`}
-                    className="transition-colors hover:text-primary"
+                    className="transition-colors hover:text-primary-strong"
                   >
                     {gewerkName}
                   </Link>
@@ -317,7 +314,7 @@ export default async function AnbieterDetail({
 
               <button
                 type="button"
-                className="mt-6 w-full rounded-full bg-primary px-6 py-3 font-semibold text-surface transition-colors hover:opacity-80"
+                className="mt-6 w-full rounded-full bg-primary-strong px-6 py-3 font-semibold text-surface transition-colors hover:opacity-80"
               >
                 Anfrage senden
               </button>

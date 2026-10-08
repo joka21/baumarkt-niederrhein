@@ -39,7 +39,7 @@ export default function AnbieterCard({ anbieter }: { anbieter: Anbieter }) {
 
       <div className="mt-3">
         <h3 className="text-text">{anbieter.name}</h3>
-        <p className="mt-0.5 text-sm text-text-muted">
+        <p className="mt-0.5 text-sm text-text-muted-strong">
           {[erstesGewerk?.name, anbieter.ort].filter(Boolean).join(" · ")}
         </p>
       </div>
