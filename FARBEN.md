@@ -1,96 +1,77 @@
-# Farben – Baumarkt Niederrhein
+# Farben und Schriften – Baumarkt Niederrhein
 
-Übersicht aller Farben im Projekt (Stand: 08.10.2026).
+Stand: 08.10.2026. Verbindlicher Standard sind die Figma-Tokens aus
+„Bodenbeläge Niederrhein“ (Startseite Desktop `1:2`, Mobil `129:1894`).
+Definiert in `app/globals.css`. Direkte Tailwind-Farben wie `stone-*` oder
+`orange-*` werden nicht mehr verwendet.
 
-## 1. Design-Tokens aus Figma
+## 1. Farben
 
-Quelle: Figma „Bodenbeläge Niederrhein“, Knoten `107:3090`.
-Definiert in `app/globals.css` (`@theme`), nutzbar als Tailwind-Klassen.
+| Figma-Variable            | Hex       | Token                       | Verwendung                              | Beispiel-Klassen                   |
+|---------------------------|-----------|-----------------------------|-----------------------------------------|------------------------------------|
+| `Color/Primary`           | `#059669` | `--color-primary`           | Buttons, Links, Icons, Akzente          | `bg-primary`, `text-primary`       |
+| `Color/Surface`           | `#ffffff` | `--color-surface`           | Flächen                                 | `bg-surface`, `text-surface`       |
+| `Color/Dark-Surface`      | `#1f1b18` | `--color-dark-surface`      | dunkle Flächen (Fußzeile, Betriebe-Box) | `bg-dark-surface`                  |
+| `Color/Text`              | `#1f1b18` | `--color-text`              | Überschriften und Fließtext             | `text-text`                        |
+| `Color/Text-Muted`        | `#998f85` | `--color-text-muted`        | nur kurze Zusatzangaben, nie Fließtext  | `text-text-muted`                  |
+| `Color/Stroke`            | `#e5e7eb` | `--color-stroke`            | Rahmen und Trennlinien                  | `border-stroke`, `divide-stroke`   |
+| `Color/Secondary`         | `#ddfce6` | `--color-secondary`         | Check-Kreise in der TeamKarte           | `bg-secondary`                     |
+| `Color/Text-On-Secondary` | `#27500a` | `--color-text-on-secondary` | Text auf `secondary` (derzeit ungenutzt) | `text-text-on-secondary`          |
 
-| Figma-Variable       | Hex       | Tailwind-Token           | Beispiel-Klassen                 |
-|----------------------|-----------|--------------------------|----------------------------------|
-| `Color/Primary`      | `#059669` | `--color-primary`        | `bg-primary`, `text-primary`     |
-| `Color/Surface`      | `#ffffff` | `--color-surface`        | `bg-surface`                     |
-| `Color/Dark-Surface` | `#1f1b18` | `--color-dark-surface`   | `bg-dark-surface`                |
-| `Color/Text`         | `#1f1b18` | `--color-text`           | `text-text`                      |
-| `Color/Text-Muted`   | `#998f85` | `--color-text-muted`     | `text-text-muted`                |
-| `Color/Stroke`       | `#e5e7eb` | `--color-stroke`         | `border-stroke`                  |
+In Figma vorhanden, aber nicht als Token übernommen: `Color/Accent` `#ffa629`.
 
-> Hinweis: Die Tokens sind angelegt, werden in den Komponenten aber noch nicht verwendet.
+### Regeln
 
-## 2. Basisfarben (CSS-Variablen)
+- Links im Fließtext: `text-primary underline underline-offset-2`.
+  Buttons und Menüpunkte ohne Unterstreichung.
+- Hover auf Primärflächen über Deckkraft (`hover:opacity-80/90`), nicht über eine weitere Farbe.
 
-Definiert in `app/globals.css` (`:root`).
+### Farben außerhalb der Tokens
 
-| Variable       | Hex       | Verwendung                      |
-|----------------|-----------|---------------------------------|
-| `--background` | `#ffffff` | Seitenhintergrund (`bg-background`) |
-| `--foreground` | `#1c1917` | Standard-Textfarbe (`text-foreground`, = stone-900) |
+| Stelle                              | Wert                     | Grund                                   |
+|-------------------------------------|--------------------------|-----------------------------------------|
+| `lib/gewerke.ts`                    | 10 Gewerk-Farben + Fallback `#64748B` | bewusst unverändert (Platzhalterbilder) |
+| `app/opengraph-image.tsx`           | `rgba(255,255,255,0.18)` | halbtransparente Fläche hinter dem Logo |
+| `components/TeamKarte.tsx`          | Schatten `rgba(0,0,0,0.08)` | Schattenwert aus Figma               |
+| `components/AnbieterCard.tsx`, `components/CategoryBar.tsx` | `white` in SVG-Icons | Komponenten derzeit ungenutzt |
 
-## 3. Aktuell genutzte Tailwind-Farben
+## 2. Schriften
 
-Werden direkt als Tailwind-Klassen in `app/` und `components/` verwendet.
-Hex-Werte sind Näherungen (Tailwind v4 definiert die Farben in OKLCH).
+Geladen über `next/font/google` in `app/layout.tsx` (selbst gehostet, `display: swap`).
+In Komponenten keine Schriftangaben – die Zuordnung erfolgt über die Grundstile in `app/globals.css`.
 
-### Neutral (Stone)
+| Token          | Schrift         | Geladene Schnitte  | Verwendung                                  |
+|----------------|-----------------|--------------------|---------------------------------------------|
+| `font-heading` | Libre Franklin  | 800                | Überschriften h1–h6                         |
+| `font-body`    | Source Sans 3   | 400, 500, 600, 700 | Fließtext, Menü, Buttons, Formulare         |
 
-| Klasse      | Hex       | Häufigkeit | Typische Verwendung                     |
-|-------------|-----------|-----------:|-----------------------------------------|
-| `stone-50`  | `#fafaf9` | 7  | helle Flächen                           |
-| `stone-100` | `#f5f5f4` | 9  | Hintergründe, Hover                     |
-| `stone-200` | `#e7e5e4` | 15 | Rahmen, Trennlinien                     |
-| `stone-300` | `#d6d3d1` | 5  | Rahmen (z. B. Gewerk-Pills)             |
-| `stone-500` | `#78716c` | 17 | Sekundärtext, Breadcrumb                |
-| `stone-600` | `#57534e` | 10 | Fließtext, Untertitel                   |
-| `stone-700` | `#44403c` | 20 | Fließtext                               |
-| `stone-800` | `#292524` | 1  | –                                       |
-| `stone-900` | `#1c1917` | 31 | Überschriften, Haupttext (auch `/30`, `/50` als Overlay) |
+Source Sans 3 600 wird für den Figma-Stil „Button“ geladen.
 
-### Akzent (Orange)
+## 3. Schriftgrößen
 
-| Klasse       | Hex       | Häufigkeit | Typische Verwendung              |
-|--------------|-----------|-----------:|----------------------------------|
-| `orange-600` | `#ea580c` | 8  | Buttons, Icons                   |
-| `orange-700` | `#c2410c` | 15 | Hover-Zustände, Links            |
-| `orange-800` | `#9a3412` | 2  | Hover auf dunklen Akzenten       |
+Mobil gilt bis 767px, Desktop ab 768px (Tailwind `md`).
 
-### Weiß
+### Überschriften (Libre Franklin ExtraBold 800, Zeilenhöhe 1.1)
 
-| Klasse                         | Hex       | Verwendung              |
-|--------------------------------|-----------|-------------------------|
-| `white`, `white/90`, `white/95` | `#ffffff` | Text auf Bildern, Overlays |
+| Stil | Klasse    | Mobil | Desktop | Herkunft                                      |
+|------|-----------|------:|--------:|-----------------------------------------------|
+| h1   | `text-h1` | 34px  | 56px    | Figma (`h1-mobile`, `h1-desktop`)             |
+| h2   | `text-h2` | 28px  | 44px    | Figma (`h2-mobile`, `h2-desktop`)             |
+| h3   | `text-h3` | 24px  | 34px    | **nicht aus Figma** – zwischen h2 und h4 abgeleitet |
+| h4   | `text-h4` | 20px  | 26px    | Figma (`h4-mobile`, `h4-desktop`)             |
+| h5   | `text-h5` | 18px  | 20px    | Figma (`h5-mobile`, `h5-desktop`)             |
+| h6   | `text-h5` | 18px  | 20px    | **nicht aus Figma** – gleich wie h5           |
 
-## 4. Gewerk-Platzhalterfarben
+### Text (Source Sans 3)
 
-Definiert in `lib/gewerke.ts` (`GEWERKE_FARBEN`). Für farbige Platzhalter-Bildflächen
-auf Karten und in der Detailgalerie.
+| Figma-Stil              | Klasse         | Größe                      | Schnitt        | Zeilenhöhe |
+|-------------------------|----------------|----------------------------|----------------|-----------:|
+| Body-mobile / -desktop  | `text-body`    | 16px mobil, 18px Desktop   | Regular 400    | 1.6        |
+| Body_small              | `text-body-sm` | 15px                       | Medium 500     | 1.4*       |
+| Nav                     | `text-nav`     | 18px                       | Medium 500     | 1          |
+| Button                  | `text-button`  | 15px                       | SemiBold 600   | 1          |
 
-| Gewerk         | Hex       |
-|----------------|-----------|
-| `bodenleger`   | `#B07A4F` |
-| `maler`        | `#2F6FED` |
-| `fliesenleger` | `#0E9594` |
-| `trockenbau`   | `#6B7280` |
-| `sanitaer`     | `#0891B2` |
-| `elektro`      | `#D97706` |
-| `tischler`     | `#92400E` |
-| `dachdecker`   | `#B91C1C` |
-| `garten`       | `#15803D` |
-| `material`     | `#475569` |
-| *Fallback*     | `#64748B` |
+\* Figma gibt `100` ohne Einheit an. Für Body_small wurde 1.4 gewählt, damit
+mehrzeilige Zusatzangaben lesbar bleiben – **nicht aus Figma**.
 
-## 5. Social-Media-Bild (OG-Image)
-
-Definiert in `app/opengraph-image.tsx`.
-
-| Verwendung              | Hex                       |
-|-------------------------|---------------------------|
-| Verlauf (135°) Start    | `#EA580C` (= orange-600)  |
-| Verlauf (135°) Ende     | `#E11D48` (= rose-600)    |
-
-## Offene Punkte
-
-- **Akzentfarbe:** Im Code ist sie Orange (`orange-600`/`700`), in Figma Grün (`#059669`).
-  Für eine Umstellung müssten Buttons, Links, Icons und das OG-Image angepasst werden.
-- **Textfarbe:** Im Code wird `#1c1917` (stone-900) verwendet, in Figma `#1f1b18`. Die beiden sind fast identisch.
-- **Rahmen:** Im Code wird `stone-200` (`#e7e5e4`) verwendet, in Figma `#e5e7eb` (gray-200).
+Fließtext ist auf kleinen Bildschirmen nie kleiner als 16px.

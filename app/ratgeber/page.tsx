@@ -55,7 +55,7 @@ export default async function RatgeberUebersicht() {
 
         {artikel.length === 0 ? (
           <p className="py-16 text-center text-text">
-            Aktuell sind noch keine Ratgeber-Artikel verfügbar – schauen Sie bald
+            Aktuell sind noch keine Ratgeber-Artikel verfügbar – schau bald
             wieder vorbei.
           </p>
         ) : (

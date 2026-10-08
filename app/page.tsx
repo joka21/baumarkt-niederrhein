@@ -283,7 +283,7 @@ export default async function Home() {
               Handwerksbetriebe und Händler aus der Region können sich bei uns eintragen.
             </p>
             <Link href="/fuer-anbieter" className={`mt-6 ${BUTTON_PRIMAER}`}>
-              Betrieb eintragen
+              Betrieb vormerken
             </Link>
           </div>
         </section>
