@@ -4,7 +4,6 @@ import { getHauptmenue } from "@/lib/navigation";
 const rechtliches = [
   { label: "Impressum", href: "/impressum" },
   { label: "Datenschutz", href: "/datenschutz" },
-  { label: "AGB", href: "/agb" },
 ];
 
 export default function Footer() {
