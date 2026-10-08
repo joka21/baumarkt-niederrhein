@@ -45,16 +45,16 @@ export default async function RatgeberUebersicht() {
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6">
         <div className="pb-6 sm:pb-8">
-          <h1 className="text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
+          <h1 className="text-text">
             Ratgeber – Tipps rund um Handwerk &amp; Material am Niederrhein
           </h1>
-          <p className="mt-2 text-stone-600">
+          <p className="mt-2 text-text">
             Praktische Artikel zu Handwerk, Material und Renovierung.
           </p>
         </div>
 
         {artikel.length === 0 ? (
-          <p className="py-16 text-center text-stone-500">
+          <p className="py-16 text-center text-text">
             Aktuell sind noch keine Ratgeber-Artikel verfügbar – schauen Sie bald
             wieder vorbei.
           </p>
@@ -70,7 +70,7 @@ export default async function RatgeberUebersicht() {
                     href={`/ratgeber/${a.slug}`}
                     className="group flex flex-col"
                   >
-                    <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-stone-100">
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-surface">
                       {a.cover_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -80,10 +80,10 @@ export default async function RatgeberUebersicht() {
                         />
                       ) : (
                         <div
-                          className="flex h-full w-full items-center justify-center bg-stone-200"
+                          className="flex h-full w-full items-center justify-center bg-primary"
                           aria-hidden="true"
                         >
-                          <span className="text-4xl font-bold text-white/90">
+                          <span className="text-4xl font-bold text-surface/90">
                             {a.titel.charAt(0).toUpperCase()}
                           </span>
                         </div>
@@ -92,13 +92,13 @@ export default async function RatgeberUebersicht() {
 
                     <div className="mt-3">
                       {datum && (
-                        <p className="text-xs font-medium text-stone-500">{datum}</p>
+                        <p className="text-xs font-medium text-text-muted">{datum}</p>
                       )}
-                      <h3 className="mt-1 font-semibold text-stone-900 group-hover:text-orange-700">
+                      <h3 className="mt-1 text-text group-hover:text-primary">
                         {a.titel}
                       </h3>
                       {a.auszug && (
-                        <p className="mt-1 line-clamp-3 text-sm text-stone-500">
+                        <p className="mt-1 line-clamp-3 text-sm text-text">
                           {a.auszug}
                         </p>
                       )}

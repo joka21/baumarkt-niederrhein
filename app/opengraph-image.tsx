@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Baumarkt Niederrhein – Handwerk & Material am Niederrhein";
+export const alt = "Baumarkt Niederrhein – Ratgeber für Bauen und Renovieren am Niederrhein";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -15,8 +15,8 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "flex-start",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #EA580C 0%, #E11D48 100%)",
-          color: "white",
+          background: "#059669" /* Token primary */,
+          color: "#ffffff" /* Token surface */,
           padding: "90px",
           fontFamily: "sans-serif",
         }}
@@ -41,7 +41,7 @@ export default async function Image() {
           Baumarkt Niederrhein
         </div>
         <div style={{ display: "flex", fontSize: 38, marginTop: 26, opacity: 0.92 }}>
-          Handwerk & Material am Niederrhein
+          Ratgeber für Bauen und Renovieren am Niederrhein
         </div>
       </div>
     ),

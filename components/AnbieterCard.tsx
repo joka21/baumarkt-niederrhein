@@ -32,14 +32,14 @@ export default function AnbieterCard({ anbieter }: { anbieter: Anbieter }) {
           className="transition-transform duration-300 group-hover:scale-105"
           letterClassName="text-6xl"
         />
-        <span className="absolute right-3 top-3 text-stone-900/30 transition-colors group-hover:text-stone-900/50">
+        <span className="absolute right-3 top-3 text-text/30 transition-colors group-hover:text-text/50">
           <HeartIcon className="h-7 w-7 drop-shadow" />
         </span>
       </div>
 
       <div className="mt-3">
-        <h3 className="font-semibold text-stone-900">{anbieter.name}</h3>
-        <p className="mt-0.5 text-sm text-stone-500">
+        <h3 className="text-text">{anbieter.name}</h3>
+        <p className="mt-0.5 text-sm text-text-muted">
           {[erstesGewerk?.name, anbieter.ort].filter(Boolean).join(" · ")}
         </p>
       </div>

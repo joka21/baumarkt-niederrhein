@@ -28,7 +28,7 @@ export async function generateMetadata({
     .eq("status", "aktiv")
     .maybeSingle();
 
-  if (!data) return { title: "Anbieter nicht gefunden" };
+  if (!data) return { title: "Anbieter nicht gefunden", robots: { index: false, follow: true } };
 
   const anbieter = data as unknown as Anbieter;
   const gewerk = getGewerke(anbieter)[0]?.name ?? "Handwerk";
@@ -42,6 +42,8 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: `/anbieter/${slug}` },
+    // Anbieterseiten vorerst nicht indexieren, Links aber verfolgen.
+    robots: { index: false, follow: true },
     openGraph: {
       type: "website",
       locale: "de_DE",
@@ -198,10 +200,10 @@ export default async function AnbieterDetail({
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
         {/* Sichtbare Breadcrumb – spiegelt das JSON-LD BreadcrumbList */}
-        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-stone-500">
+        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-text-muted">
           <ol className="flex flex-wrap items-center gap-1.5">
             <li>
-              <Link href="/" className="transition-colors hover:text-orange-700">
+              <Link href="/" className="transition-colors hover:text-primary">
                 Start
               </Link>
             </li>
@@ -211,7 +213,7 @@ export default async function AnbieterDetail({
                 <li>
                   <Link
                     href={`/?kategorie=${gewerkSlug}`}
-                    className="transition-colors hover:text-orange-700"
+                    className="transition-colors hover:text-primary"
                   >
                     {gewerkName}
                   </Link>
@@ -220,7 +222,7 @@ export default async function AnbieterDetail({
             )}
             <li aria-hidden="true">›</li>
             <li>
-              <span aria-current="page" className="text-stone-700">
+              <span aria-current="page" className="text-text">
                 {anbieter.name}
               </span>
             </li>
@@ -229,10 +231,10 @@ export default async function AnbieterDetail({
 
         {/* Titelzeile */}
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
+          <h1 className="text-text">
             {anbieter.name}
           </h1>
-          <p className="mt-2 text-sm text-stone-600">
+          <p className="mt-2 text-sm text-text">
             {[gewerke.map((g) => g.name).join(", "), standort || anbieter.ort]
               .filter(Boolean)
               .join(" · ")}
@@ -260,20 +262,20 @@ export default async function AnbieterDetail({
         <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-3">
           {/* Beschreibung */}
           <div className="lg:col-span-2">
-            <h2 className="text-xl font-semibold text-stone-900">Über den Anbieter</h2>
-            <p className="mt-4 whitespace-pre-line leading-relaxed text-stone-700">
+            <h2 className="text-xl text-text">Über den Anbieter</h2>
+            <p className="mt-4 whitespace-pre-line leading-relaxed text-text">
               {anbieter.beschreibung ?? "Für diesen Anbieter liegt noch keine Beschreibung vor."}
             </p>
 
             {gewerke.length > 0 && (
               <div className="mt-8">
-                <h3 className="text-base font-semibold text-stone-900">Gewerke</h3>
+                <h3 className="text-base text-text">Gewerke</h3>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {gewerke.map((g) => (
                     <Link
                       key={g.slug}
                       href={`/?kategorie=${g.slug}`}
-                      className="rounded-full border border-stone-300 px-4 py-1.5 text-sm font-medium text-stone-700 transition-colors hover:border-stone-900 hover:text-stone-900"
+                      className="rounded-full border border-stroke px-4 py-1.5 text-sm font-medium text-text transition-colors hover:border-text hover:text-text"
                     >
                       {g.name}
                     </Link>
@@ -284,30 +286,30 @@ export default async function AnbieterDetail({
 
             {anbieter.einzugsgebiet && (
               <div className="mt-8">
-                <h3 className="text-base font-semibold text-stone-900">Einzugsgebiet</h3>
-                <p className="mt-2 text-stone-700">{anbieter.einzugsgebiet}</p>
+                <h3 className="text-base text-text">Einzugsgebiet</h3>
+                <p className="mt-2 text-text">{anbieter.einzugsgebiet}</p>
               </div>
             )}
           </div>
 
           {/* Sticky Kontaktkarte */}
           <div className="lg:col-span-1">
-            <div className="sticky top-28 rounded-2xl border border-stone-200 p-6 shadow-lg">
-              <p className="text-lg font-semibold text-stone-900">Kontakt aufnehmen</p>
-              <p className="mt-1 text-sm text-stone-500">
+            <div className="sticky top-28 rounded-2xl border border-stroke p-6 shadow-lg">
+              <p className="text-lg font-semibold text-text">Kontakt aufnehmen</p>
+              <p className="mt-1 text-sm text-text">
                 Unverbindlich anfragen – meist Antwort innerhalb eines Werktags.
               </p>
 
               <dl className="mt-5 space-y-3 text-sm">
                 {anbieter.kontakt_email && (
-                  <div className="flex items-center gap-3 text-stone-700">
-                    <MailIcon className="h-5 w-5 text-orange-600" />
+                  <div className="flex items-center gap-3 text-text">
+                    <MailIcon className="h-5 w-5 text-primary" />
                     <span className="truncate">{anbieter.kontakt_email}</span>
                   </div>
                 )}
                 {anbieter.kontakt_telefon && (
-                  <div className="flex items-center gap-3 text-stone-700">
-                    <PhoneIcon className="h-5 w-5 text-orange-600" />
+                  <div className="flex items-center gap-3 text-text">
+                    <PhoneIcon className="h-5 w-5 text-primary" />
                     <span>{anbieter.kontakt_telefon}</span>
                   </div>
                 )}
@@ -315,7 +317,7 @@ export default async function AnbieterDetail({
 
               <button
                 type="button"
-                className="mt-6 w-full rounded-full bg-orange-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-orange-700"
+                className="mt-6 w-full rounded-full bg-primary px-6 py-3 font-semibold text-surface transition-colors hover:opacity-80"
               >
                 Anfrage senden
               </button>

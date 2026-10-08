@@ -32,13 +32,13 @@ export default function FuerAnbieter() {
 
       <main className="flex-1">
         <section className="mx-auto w-full max-w-4xl px-4 py-20 text-center sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-wide text-orange-700">
+          <p className="text-sm font-semibold uppercase tracking-wide text-primary">
             Anbieter werden
           </p>
-          <h1 className="mt-4 text-4xl font-bold tracking-tight text-stone-900 sm:text-5xl">
+          <h1 className="mt-4 text-text">
             Ihr Handwerk. Ihre Region. Ihre Kunden.
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-stone-600">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-text">
             Werden Sie Teil von Baumarkt Niederrhein und erreichen Sie neue
             Kunden aus Ihrer Umgebung – mit einem professionellen Profil unter
             einer gemeinsamen, vertrauenswürdigen Marke.
@@ -46,7 +46,7 @@ export default function FuerAnbieter() {
           <div className="mt-10">
             <Link
               href="/fuer-anbieter"
-              className="inline-block rounded-full bg-orange-600 px-8 py-4 font-semibold text-white transition-colors hover:bg-orange-700"
+              className="inline-block rounded-full bg-primary px-8 py-4 font-semibold text-surface transition-colors hover:opacity-80"
             >
               Jetzt kostenlos starten
             </Link>
@@ -58,12 +58,12 @@ export default function FuerAnbieter() {
             {vorteile.map((vorteil) => (
               <div
                 key={vorteil.titel}
-                className="rounded-2xl border border-stone-200 bg-white p-8 shadow-sm"
+                className="rounded-2xl border border-stroke bg-surface p-8 shadow-sm"
               >
-                <h2 className="text-lg font-semibold text-stone-900">
+                <h2 className="text-lg text-text">
                   {vorteil.titel}
                 </h2>
-                <p className="mt-3 text-stone-600">{vorteil.text}</p>
+                <p className="mt-3 text-text">{vorteil.text}</p>
               </div>
             ))}
           </div>

@@ -1,18 +1,107 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff; /* weiße Fläche im Airbnb-Stil */
-  --foreground: #1c1917; /* stone-900 */
-}
-
+/* Schriften aus Figma, geladen via next/font in layout.tsx */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+  --font-heading: var(--font-libre-franklin), Arial, Helvetica, sans-serif;
+  --font-body: var(--font-source-sans), Arial, Helvetica, sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+/* Design-Tokens aus Figma "Bodenbeläge Niederrhein" – verbindlicher Standard */
+@theme {
+  /* Farben → bg-primary, text-text-muted, border-stroke, … */
+  --color-primary: #059669; /* Buttons, Links, Icons, Akzente */
+  --color-surface: #ffffff; /* Flächen */
+  --color-dark-surface: #1f1b18; /* dunkle Flächen */
+  --color-text: #1f1b18; /* Überschriften und Fließtext */
+  --color-text-muted: #998f85; /* nur kurze Zusatzangaben, nie Fließtext */
+  --color-stroke: #e5e7eb; /* Rahmen und Trennlinien */
+  --color-secondary: #ddfce6; /* Knoten 75:568 (Check-Kreis) */
+  --color-text-on-secondary: #27500a;
+
+  /* Textstile Source Sans 3 → text-body-sm, text-nav, text-button */
+  --text-body-sm: 15px; /* Body_small */
+  --text-body-sm--line-height: 1.4;
+  --text-body-sm--font-weight: 500;
+  --text-nav: 18px; /* Nav */
+  --text-nav--line-height: 1;
+  --text-nav--font-weight: 500;
+  --text-button: 15px; /* Button */
+  --text-button--line-height: 1;
+  --text-button--font-weight: 600;
+}
+
+/* Responsive Textstile: mobil (Figma *-mobile) → ab md Desktop (Figma *-desktop).
+   h3 und h6 gibt es in Figma nicht – abgeleitet (h3: 24/34px, h6 = h5). */
+@utility text-h1 {
+  font-size: 34px;
+  line-height: 1.1;
+  @media (width >= 48rem) {
+    font-size: 56px;
+  }
+}
+@utility text-h2 {
+  font-size: 28px;
+  line-height: 1.1;
+  @media (width >= 48rem) {
+    font-size: 44px;
+  }
+}
+@utility text-h3 {
+  font-size: 24px;
+  line-height: 1.1;
+  @media (width >= 48rem) {
+    font-size: 34px;
+  }
+}
+@utility text-h4 {
+  font-size: 20px;
+  line-height: 1.1;
+  @media (width >= 48rem) {
+    font-size: 26px;
+  }
+}
+@utility text-h5 {
+  font-size: 18px;
+  line-height: 1.1;
+  @media (width >= 48rem) {
+    font-size: 20px;
+  }
+}
+@utility text-body {
+  font-size: 16px;
+  line-height: 1.6;
+  @media (width >= 48rem) {
+    font-size: 18px;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-surface font-body text-body text-text;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading font-extrabold;
+  }
+  h1 {
+    @apply text-h1;
+  }
+  h2 {
+    @apply text-h2;
+  }
+  h3 {
+    @apply text-h3;
+  }
+  h4 {
+    @apply text-h4;
+  }
+  h5,
+  h6 {
+    @apply text-h5;
+  }
 }

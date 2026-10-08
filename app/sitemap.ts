@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import { AUTOREN } from "@/lib/autoren";
 
 const BASE_URL = "https://www.baumarkt-niederrhein.de";
 
@@ -15,19 +16,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
-  const { data, error } = await supabase
-    .from("anbieter")
-    .select("slug")
-    .eq("status", "aktiv");
-
-  if (error || !data) return staticRoutes; // bei Fehler nur statische Routen
-
-  const anbieterRoutes: MetadataRoute.Sitemap = data.map((a) => ({
-    url: `${BASE_URL}/anbieter/${a.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: 0.8,
-  }));
+  // Anbieterseiten (/anbieter/[slug]) stehen bewusst nicht in der Sitemap –
+  // sie sind noindex, follow (siehe app/anbieter/[slug]/page.tsx).
 
   const { data: artikelData } = await supabase
     .from("artikel")
@@ -44,5 +34,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...staticRoutes, ...anbieterRoutes, ...ratgeberRoutes];
+  const teamRoutes: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/team`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
+    ...AUTOREN.map((a) => ({
+      url: `${BASE_URL}/team/${a.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.4,
+    })),
+  ];
+
+  return [...staticRoutes, ...ratgeberRoutes, ...teamRoutes];
 }

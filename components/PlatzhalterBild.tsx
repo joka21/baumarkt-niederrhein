@@ -21,7 +21,7 @@ export default function PlatzhalterBild({
       style={{ backgroundColor: color }}
       aria-hidden="true"
     >
-      <span className={`font-bold text-white/90 ${letterClassName}`}>
+      <span className={`font-bold text-surface/90 ${letterClassName}`}>
         {initial}
       </span>
     </div>

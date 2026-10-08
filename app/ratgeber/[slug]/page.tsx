@@ -7,6 +7,8 @@ import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AutorenBox from "@/components/AutorenBox";
+import { autorenAusFeld, autorenNamen } from "@/lib/autoren";
 
 const datumFormat = new Intl.DateTimeFormat("de-DE", { dateStyle: "long" });
 
@@ -25,7 +27,7 @@ export async function generateMetadata({
   const supabase = createClient(await cookies());
   const { data: artikel } = await supabase
     .from("artikel")
-    .select("titel, auszug, cover_url, autor, veroeffentlicht_am, aktualisiert_am")
+    .select("titel, auszug, cover_url, veroeffentlicht_am, aktualisiert_am")
     .eq("slug", slug)
     .eq("status", "veroeffentlicht")
     .maybeSingle();
@@ -52,7 +54,7 @@ export async function generateMetadata({
       ...(artikel.aktualisiert_am
         ? { modifiedTime: artikel.aktualisiert_am }
         : {}),
-      ...(artikel.autor ? { authors: [artikel.autor] } : {}),
+      authors: ["Baumarkt Niederrhein"],
     },
   };
 }
@@ -62,37 +64,37 @@ export async function generateMetadata({
 // pro Seite bestehen bleibt.
 const markdownComponents = {
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 className="mt-10 text-xl font-bold text-stone-900 sm:text-2xl" {...props} />
+    <h2 className="mt-10 text-xl text-text sm:text-2xl" {...props} />
   ),
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 className="mt-10 text-xl font-bold text-stone-900 sm:text-2xl" {...props} />
+    <h2 className="mt-10 text-xl text-text sm:text-2xl" {...props} />
   ),
   h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 className="mt-8 text-lg font-semibold text-stone-900" {...props} />
+    <h3 className="mt-8 text-lg text-text" {...props} />
   ),
   p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
-    <p className="mt-4 leading-relaxed text-stone-700" {...props} />
+    <p className="mt-4 leading-relaxed text-text" {...props} />
   ),
   ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul className="mt-4 list-disc space-y-1 pl-6 text-stone-700" {...props} />
+    <ul className="mt-4 list-disc space-y-1 pl-6 text-text" {...props} />
   ),
   ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
-    <ol className="mt-4 list-decimal space-y-1 pl-6 text-stone-700" {...props} />
+    <ol className="mt-4 list-decimal space-y-1 pl-6 text-text" {...props} />
   ),
   li: (props: React.HTMLAttributes<HTMLLIElement>) => (
     <li className="leading-relaxed" {...props} />
   ),
   a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
-    <a className="font-medium text-orange-700 underline hover:text-orange-800" {...props} />
+    <a className="text-primary underline underline-offset-2 hover:opacity-80" {...props} />
   ),
   blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
     <blockquote
-      className="mt-4 border-l-4 border-stone-300 pl-4 italic text-stone-600"
+      className="mt-4 border-l-4 border-stroke pl-4 italic text-text"
       {...props}
     />
   ),
   code: (props: React.HTMLAttributes<HTMLElement>) => (
-    <code className="rounded bg-stone-100 px-1.5 py-0.5 text-sm text-stone-800" {...props} />
+    <code className="rounded bg-surface px-1.5 py-0.5 text-sm text-text" {...props} />
   ),
   table: (props: React.HTMLAttributes<HTMLTableElement>) => (
     <div className="mt-4 overflow-x-auto">
@@ -100,10 +102,10 @@ const markdownComponents = {
     </div>
   ),
   th: (props: React.ThHTMLAttributes<HTMLTableCellElement>) => (
-    <th className="border-b border-stone-300 py-2 pr-4 font-semibold text-stone-900" {...props} />
+    <th className="border-b border-stroke py-2 pr-4 font-semibold text-text" {...props} />
   ),
   td: (props: React.TdHTMLAttributes<HTMLTableCellElement>) => (
-    <td className="border-b border-stone-200 py-2 pr-4 text-stone-700" {...props} />
+    <td className="border-b border-stroke py-2 pr-4 text-text" {...props} />
   ),
 };
 
@@ -117,7 +119,7 @@ export default async function ArtikelSeite({
   const { data: artikel } = await supabase
     .from("artikel")
     .select(
-      "titel, auszug, inhalt, cover_url, autor, kategorie_slug, veroeffentlicht_am, aktualisiert_am"
+      "titel, auszug, inhalt, cover_url, autor, veroeffentlicht_am, aktualisiert_am"
     )
     .eq("slug", slug)
     .eq("status", "veroeffentlicht")
@@ -126,20 +128,23 @@ export default async function ArtikelSeite({
   if (!artikel) notFound();
 
   const datum = formatDatum(artikel.veroeffentlicht_am);
-  const metaZeile = [artikel.autor, datum].filter(Boolean).join(" · ");
-
-  // Interne Verlinkung zum passenden Gewerk-Filter (Label = Slug kapitalisiert,
-  // gleiche Logik wie auf der Startseite).
-  const gewerkLabel = artikel.kategorie_slug
-    ? artikel.kategorie_slug.charAt(0).toUpperCase() +
-      artikel.kategorie_slug.slice(1)
-    : null;
+  // "autor" enthält Team-Slug(s); ohne Zuordnung erscheint die Redaktion.
+  const autoren = autorenAusFeld(artikel.autor);
+  const autorText = autorenNamen(autoren);
+  const metaZeile = [autorText, datum].filter(Boolean).join(" · ");
 
   // Strukturierte Daten (BlogPosting + BreadcrumbList) – wiederverwendet das
   // bereits geladene artikel, kein zusaetzlicher Query.
   const BASE_URL = "https://www.baumarkt-niederrhein.de";
   const articleUrl = `${BASE_URL}/ratgeber/${slug}`;
   const articleImage = artikel.cover_url ?? `${BASE_URL}/opengraph-image`;
+
+  const organization = {
+    "@type": "Organization",
+    "@id": `${BASE_URL}/#organization`,
+    name: "Baumarkt Niederrhein",
+    url: `${BASE_URL}/`,
+  };
 
   const blogPosting = {
     "@type": "BlogPosting",
@@ -149,8 +154,10 @@ export default async function ArtikelSeite({
     image: articleImage,
     inLanguage: "de-DE",
     isPartOf: { "@id": `${BASE_URL}/#website` },
-    publisher: { "@id": `${BASE_URL}/#organization` },
-    author: { "@type": "Organization", name: artikel.autor },
+    // Bewusst kein "Person"-Schema: Die Team-Figuren sind erfunden, verantwortlich
+    // ist die Redaktion – Autor und Herausgeber ist die Organisation.
+    publisher: organization,
+    author: organization,
     ...(artikel.auszug ? { description: artikel.auszug } : {}),
     ...(artikel.veroeffentlicht_am
       ? { datePublished: artikel.veroeffentlicht_am }
@@ -185,10 +192,10 @@ export default async function ArtikelSeite({
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6">
         {/* Sichtbare Breadcrumb – spiegelt das JSON-LD BreadcrumbList */}
-        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-stone-500">
+        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-text-muted">
           <ol className="flex flex-wrap items-center gap-1.5">
             <li>
-              <Link href="/" className="transition-colors hover:text-orange-700">
+              <Link href="/" className="transition-colors hover:text-primary">
                 Start
               </Link>
             </li>
@@ -196,14 +203,14 @@ export default async function ArtikelSeite({
             <li>
               <Link
                 href="/ratgeber"
-                className="transition-colors hover:text-orange-700"
+                className="transition-colors hover:text-primary"
               >
                 Ratgeber
               </Link>
             </li>
             <li aria-hidden="true">›</li>
             <li>
-              <span aria-current="page" className="text-stone-700">
+              <span aria-current="page" className="text-text">
                 {artikel.titel}
               </span>
             </li>
@@ -212,7 +219,7 @@ export default async function ArtikelSeite({
 
         <article>
           {artikel.cover_url && (
-            <div className="mb-8 overflow-hidden rounded-2xl bg-stone-100">
+            <div className="mb-8 overflow-hidden rounded-2xl bg-surface">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={artikel.cover_url}
@@ -222,16 +229,16 @@ export default async function ArtikelSeite({
             </div>
           )}
 
-          <h1 className="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
+          <h1 className="text-text">
             {artikel.titel}
           </h1>
 
           {metaZeile && (
-            <p className="mt-3 text-sm text-stone-500">{metaZeile}</p>
+            <p className="mt-3 text-sm text-text-muted">{metaZeile}</p>
           )}
 
           {artikel.auszug && (
-            <p className="mt-6 text-lg leading-relaxed text-stone-600">
+            <p className="mt-6 text-lg leading-relaxed text-text">
               {artikel.auszug}
             </p>
           )}
@@ -242,16 +249,7 @@ export default async function ArtikelSeite({
             </ReactMarkdown>
           </div>
 
-          {artikel.kategorie_slug && gewerkLabel && (
-            <div className="mt-12 rounded-2xl border border-stone-200 bg-stone-50 p-6">
-              <Link
-                href={`/?kategorie=${artikel.kategorie_slug}`}
-                className="font-semibold text-orange-700 transition-colors hover:text-orange-800"
-              >
-                Passende Betriebe am Niederrhein: alle {gewerkLabel} ansehen →
-              </Link>
-            </div>
-          )}
+          <AutorenBox autoren={autoren} />
         </article>
       </main>
 

@@ -1,29 +1,40 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Libre_Franklin, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+// Schriften nach Figma, selbst gehostet über next/font. Nur benötigte Schnitte:
+// Libre Franklin 800 (Überschriften), Source Sans 3 400/500/700 (Text) + 600 (Figma-Stil "Button").
+const libreFranklin = Libre_Franklin({
+  variable: "--font-libre-franklin",
   subsets: ["latin"],
+  weight: "800",
+  display: "swap",
+});
+
+const sourceSans = Source_Sans_3({
+  variable: "--font-source-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.baumarkt-niederrhein.de"),
   title: {
-    default: "Baumarkt Niederrhein – Handwerker & Material am Niederrhein",
+    default: "Baumarkt Niederrhein: Ratgeber für Bauen und Renovieren",
     template: "%s | Baumarkt Niederrhein",
   },
   description:
-    "Baumarkt Niederrhein – geprüfte Handwerker und Händler aus der Region. Finden Sie Anbieter für Bodenleger, Maler, Fliesenleger, Sanitär, Elektro und mehr am Niederrhein.",
+    "Sechs Tiere vom Niederrhein schreiben über Bauen, Renovieren und Handwerk. Mit Ratgebern, Kostenübersichten und den Baumärkten in deiner Stadt.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "de_DE",
     url: "/",
     siteName: "Baumarkt Niederrhein",
-    title: "Baumarkt Niederrhein – Handwerker & Material am Niederrhein",
+    title: "Baumarkt Niederrhein: Ratgeber für Bauen und Renovieren",
     description:
-      "Geprüfte Handwerker und Händler aus der Region Niederrhein – mit Profil, Leistungen und Kontakt.",
+      "Sechs Tiere vom Niederrhein schreiben über Bauen, Renovieren und Handwerk. Mit Ratgebern, Kostenübersichten und den Baumärkten in deiner Stadt.",
     // TODO Block D: Standard-OG-Bild (opengraph-image) ergänzen
   },
 };
@@ -36,7 +47,7 @@ export default function RootLayout({
   return (
     <html
       lang="de"
-      className={`${inter.variable} h-full antialiased`}
+      className={`${libreFranklin.variable} ${sourceSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

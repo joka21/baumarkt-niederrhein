@@ -39,7 +39,7 @@ export default function CategoryBar({ kategorien, activeSlug }: CategoryBarProps
   ];
 
   return (
-    <div className="sticky top-[65px] z-40 border-b border-stone-200 bg-white">
+    <div className="sticky top-[65px] z-40 border-b border-stroke bg-surface">
       <div className="mx-auto flex w-full max-w-7xl items-center gap-4 px-4 sm:px-6">
         <nav className="flex flex-1 items-center gap-6 overflow-x-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {eintraege.map((eintrag) => {
@@ -50,8 +50,8 @@ export default function CategoryBar({ kategorien, activeSlug }: CategoryBarProps
                 href={eintrag.href}
                 className={`group flex shrink-0 flex-col items-center gap-1 border-b-2 pb-1 text-sm font-medium transition-colors ${
                   aktiv
-                    ? "border-orange-600 text-stone-900"
-                    : "border-transparent text-stone-500 hover:border-stone-300 hover:text-stone-900"
+                    ? "border-primary text-text"
+                    : "border-transparent text-text-muted hover:border-stroke hover:text-text"
                 }`}
               >
                 {eintrag.name}
@@ -62,7 +62,7 @@ export default function CategoryBar({ kategorien, activeSlug }: CategoryBarProps
 
         <button
           type="button"
-          className="flex shrink-0 items-center gap-2 rounded-xl border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-700 transition-colors hover:border-stone-900"
+          className="flex shrink-0 items-center gap-2 rounded-xl border border-stroke px-4 py-2 text-sm font-semibold text-text transition-colors hover:border-text"
         >
           <FilterIcon className="h-4 w-4" />
           Filter
