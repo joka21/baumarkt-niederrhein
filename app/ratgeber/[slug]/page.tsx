@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { notFound } from "next/navigation";
 import { supabasePublic } from "@/utils/supabase/public";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AutorenBox from "@/components/AutorenBox";
+import Markdown from "@/components/Markdown";
 import { autorenAusFeld, autorenNamen } from "@/lib/autoren";
 
 const datumFormat = new Intl.DateTimeFormat("de-DE", { dateStyle: "long" });
@@ -87,56 +86,6 @@ export async function generateMetadata({
     },
   };
 }
-
-// Tailwind-Styling fuer den gerenderten Markdown (kein @tailwindcss/typography
-// vorhanden). Markdown-# wird auf h2 abgebildet, damit genau eine h1 (der Titel)
-// pro Seite bestehen bleibt.
-const markdownComponents = {
-  h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 className="mt-10 text-xl text-text sm:text-2xl" {...props} />
-  ),
-  h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 className="mt-10 text-xl text-text sm:text-2xl" {...props} />
-  ),
-  h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 className="mt-8 text-lg text-text" {...props} />
-  ),
-  p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
-    <p className="mt-4 leading-relaxed text-text" {...props} />
-  ),
-  ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul className="mt-4 list-disc space-y-1 pl-6 text-text" {...props} />
-  ),
-  ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
-    <ol className="mt-4 list-decimal space-y-1 pl-6 text-text" {...props} />
-  ),
-  li: (props: React.HTMLAttributes<HTMLLIElement>) => (
-    <li className="leading-relaxed" {...props} />
-  ),
-  a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
-    <a className="text-primary-strong underline underline-offset-2 hover:opacity-80" {...props} />
-  ),
-  blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
-    <blockquote
-      className="mt-4 border-l-4 border-stroke pl-4 italic text-text"
-      {...props}
-    />
-  ),
-  code: (props: React.HTMLAttributes<HTMLElement>) => (
-    <code className="rounded bg-surface px-1.5 py-0.5 text-sm text-text" {...props} />
-  ),
-  table: (props: React.HTMLAttributes<HTMLTableElement>) => (
-    <div className="mt-4 overflow-x-auto">
-      <table className="w-full border-collapse text-left text-sm" {...props} />
-    </div>
-  ),
-  th: (props: React.ThHTMLAttributes<HTMLTableCellElement>) => (
-    <th className="border-b border-stroke py-2 pr-4 font-semibold text-text" {...props} />
-  ),
-  td: (props: React.TdHTMLAttributes<HTMLTableCellElement>) => (
-    <td className="border-b border-stroke py-2 pr-4 text-text" {...props} />
-  ),
-};
 
 export default async function ArtikelSeite({
   params,
@@ -299,9 +248,7 @@ export default async function ArtikelSeite({
           )}
 
           <div className="mt-6">
-            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-              {artikel.inhalt}
-            </ReactMarkdown>
+            <Markdown>{artikel.inhalt}</Markdown>
           </div>
 
           <AutorenBox autoren={autoren} />

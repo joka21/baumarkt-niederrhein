@@ -107,3 +107,18 @@
     @apply text-h5;
   }
 }
+
+/* Druckansicht der Checkliste (/altbau-sanieren/checkliste): Kopf, Fuß, Navigation
+   und Schaltflächen ausblenden, Checkboxen als Kästchen drucken. */
+@media print {
+  body:has([data-druckansicht]) > header,
+  body:has([data-druckansicht]) > footer,
+  [data-druckansicht] nav,
+  [data-druckansicht] button {
+    display: none !important;
+  }
+  [data-druckansicht] input[type="checkbox"] {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

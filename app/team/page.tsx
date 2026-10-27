@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TeamKarte from "@/components/TeamKarte";
@@ -11,6 +12,8 @@ export const metadata: Metadata = {
     "Sechs Tiere vom Niederrhein, sechs Meinungen: Steinkauz, Biberin, Fuchs, Feldhase, Kiebitz und Blässgans schreiben über Bauen und Renovieren.",
   alternates: { canonical: "/team" },
 };
+
+const TEXTLINK = "text-primary-strong underline underline-offset-2 hover:opacity-80";
 
 export default function TeamSeite() {
   return (
@@ -52,6 +55,53 @@ export default function TeamSeite() {
               </li>
             ))}
           </ul>
+        </section>
+
+        <section aria-labelledby="sanierungsprojekt" className="mt-16 max-w-3xl">
+          <h2 id="sanierungsprojekt" className="text-xl text-text">
+            Unser Sanierungsprojekt: Wer welche Rolle hat
+          </h2>
+          <p className="mt-3 leading-relaxed text-text">
+            Im{" "}
+            <Link href="/altbau-sanieren/unser-projekt" className={TEXTLINK}>
+              Sanierungsprojekt
+            </Link>{" "}
+            nehmen sich alle sechs gemeinsam ein altes Haus von 1964 vor. Jedes Tier schaut
+            dabei auf etwas anderes:
+          </p>
+          <p className="mt-3 leading-relaxed text-text">
+            <strong>Willi</strong> prüft die Bausubstanz: Feuchtigkeit, Risse, Dach und alles,
+            was man nicht einfach überstreichen sollte.
+            <br />
+            <strong>Sandra</strong> denkt an die Ausführung: Dachkonstruktion, Böden und alles,
+            was später in Wand und Boden verschwindet.
+            <br />
+            <strong>Rolf</strong> rechnet: ob das Budget vollständig ist, warum es eine Reserve
+            braucht und was warten kann.
+            <br />
+            <strong>Marco</strong> will einziehen, am liebsten sofort, und lernt, warum der
+            schöne Boden zuletzt kommt.
+            <br />
+            <strong>Lena</strong> fragt nach: Lüftung, Solarpflicht und ob jede angebotene
+            Technik wirklich nötig ist.
+            <br />
+            <strong>Petra</strong> plant die Reihenfolge und sorgt dafür, dass Fachleute wie
+            Energieberater rechtzeitig dazukommen.
+          </p>
+          <p className="mt-3 leading-relaxed text-text">
+            Das Haus ist erfunden, die Zahlen sind ein Rechenbeispiel. Statik, Energieberatung,
+            Schadstoffuntersuchungen und verbindliche Angebote gehören bei einem echten Haus in
+            die Hände qualifizierter Fachleute.
+          </p>
+          <p className="mt-3 leading-relaxed text-text">
+            <Link href="/altbau-sanieren/unser-projekt" className={TEXTLINK}>
+              Zum Sanierungsprojekt
+            </Link>{" "}
+            ·{" "}
+            <Link href="/altbau-sanieren" className={TEXTLINK}>
+              Altbau sanieren am Niederrhein
+            </Link>
+          </p>
         </section>
 
         <section aria-labelledby="thema-fehlt" className="mt-16 max-w-3xl">

@@ -177,6 +177,34 @@ export default async function Home() {
           </div>
         </section>
 
+        {/* Einstieg zum Bereich "Altbau sanieren" */}
+        <section aria-labelledby="altbau-titel" className="border-t border-stroke py-12 md:py-16">
+          <div className="max-w-3xl">
+            <h2 id="altbau-titel">
+              Ein altes Haus ist keine schlechte Idee. Aber es braucht einen guten Plan.
+            </h2>
+            <p className="mt-4">
+              Dach, Dämmung, Fenster, Heizung, Böden, Solar. Bei einem Altbau hängt mehr
+              zusammen, als man zuerst denkt. Wer einfach mit der schönsten Arbeit beginnt,
+              muss später vielleicht wieder alles aufmachen.
+            </p>
+            <p className="mt-4">
+              Wir zeigen, welche Fragen du zuerst klären solltest, was die richtige
+              Reihenfolge ist und wie du Kosten und mögliche Förderung sinnvoll betrachtest.
+              Verständlich, ohne Wunder-Versprechen und mit einem Beispielhaus, an dem wir
+              Entscheidungen durchspielen.
+            </p>
+          </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/altbau-sanieren" className={BUTTON_PRIMAER}>
+              Altbau sanieren am Niederrhein
+            </Link>
+            <Link href="/altbau-sanieren/checkliste" className={BUTTON_SEKUNDAER}>
+              35-Punkte-Checkliste ansehen
+            </Link>
+          </div>
+        </section>
+
         {/* 2. Baumärkte nach Stadt – nur wenn mindestens eine Stadt live ist */}
         {staedte.length > 0 && (
           <section

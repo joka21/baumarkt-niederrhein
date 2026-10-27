@@ -8,6 +8,7 @@ export function getHauptmenue(): NavLink[] {
     ...(getLiveStaedte().length > 0
       ? [{ label: "Baumärkte", href: "/#baumaerkte" }]
       : []),
+    { label: "Altbau sanieren", href: "/altbau-sanieren" },
     { label: "Ratgeber", href: "/ratgeber" },
     { label: "Team", href: "/team" },
     { label: "Für Betriebe", href: "/fuer-anbieter" },
