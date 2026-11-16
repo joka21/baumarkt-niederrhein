@@ -19,8 +19,6 @@ const STAND = {
 const spaetestes = (...daten: (string | null | undefined)[]) =>
   daten.filter(Boolean).sort().at(-1) ?? undefined;
 
-// Anbieterseiten (/anbieter/[slug]) stehen bewusst nicht in der Sitemap –
-// sie sind noindex, follow (siehe app/anbieter/[slug]/page.tsx).
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const data = await artikelFuerSitemap();
 

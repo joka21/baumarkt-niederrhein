@@ -19,7 +19,7 @@ Karten-Raster auf der Startseite, Gewerk-Filterleiste, ausführliche Detailseite
 | Framework      | **Next.js 16.2.9** (App Router, Turbopack)   |
 | UI             | React 19.2.4                                 |
 | Styling        | Tailwind CSS v4 (`@tailwindcss/postcss`)     |
-| Datenbank/Auth | **Supabase** (`@supabase/ssr`, `supabase-js`)|
+| Datenbank      | **MySQL** bei Mittwald (`mysql2`)            |
 | Schrift        | Inter (`next/font/google`)                   |
 | Sprache        | TypeScript 5                                 |
 | Hosting        | Vercel                                       |
@@ -34,7 +34,6 @@ werden können.
 | Route                  | Typ      | Inhalt                                              |
 |------------------------|----------|-----------------------------------------------------|
 | `/`                    | dynamisch| Startseite: Anbieter-Raster + Gewerk-Filter         |
-| `/anbieter/[slug]`     | dynamisch| Detailseite eines Anbieters (Profil, Kontakt)       |
 | `/fuer-anbieter`       | statisch | Werbeseite für neue Anbieter (Vorteile, CTA)        |
 | `/impressum`           | statisch | Rechtstext                                          |
 | `/datenschutz`         | statisch | Rechtstext                                          |
@@ -44,62 +43,47 @@ werden können.
 
 - **`Header`** – globale Kopfzeile / Navigation
 - **`CategoryBar`** – horizontale Gewerk-Filterleiste (setzt `?kategorie=<slug>`)
-- **`AnbieterCard`** – Karte im Raster (Startseite)
-- **`GewerkeBild`** – flächenfüllendes Gewerk-Foto mit Fallback
-- **`PlatzhalterBild`** – farbiger Platzhalter, wenn kein Foto vorhanden
 - **`Footer`** – globaler Fußbereich
 
-## 5. Datenmodell (Supabase)
+## 5. Datenmodell (MySQL)
+
+Schema: `db/mysql/001_schema.sql`, Inhalte: `db/mysql/002_daten.sql`.
 
 ```
-anbieter
-  id, slug, name, beschreibung, ort, plz, einzugsgebiet,
-  kontakt_email, kontakt_telefon, logo_url, status
-
 kategorien (= Gewerke)
-  name, slug, icon
+  id, name, slug, icon
 
-anbieter_kategorien  (n:m-Verknüpfung)
-  verknüpft anbieter <-> kategorien (pro Eintrag genau ein Gewerk)
+artikel (Ratgeber)
+  id, slug, titel, auszug, inhalt, cover_url, autor, kategorie_slug, status,
+  veroeffentlicht_am, aktualisiert_am, erstellt_am, seo_titel, seo_beschreibung
 ```
 
-- Auf der Startseite werden nur Anbieter mit `status = "aktiv"` geladen.
-- Die Gewerk-Filterung erfolgt aktuell **clientseitig in JS** (bei der kleinen
-  Datenmenge ausreichend).
-- Helfer `getGewerke()` in `lib/types.ts` extrahiert die verknüpften Gewerke.
+Betriebe und Anfragen liegen nicht in dieser Datenbank, sondern im Hub.
+Das Team steht statisch in `lib/autoren.ts`.
 
-### Gewerke & Platzhalterfarben (`lib/gewerke.ts`)
-bodenleger · maler · fliesenleger · trockenbau · sanitaer · elektro · tischler ·
-dachdecker · garten · material — jeweils mit eigener Platzhalterfarbe, Fallback `#64748B`.
+## 6. Datenbank-Anbindung
 
-## 6. Supabase-Anbindung
+- **`lib/db.ts`** – serverseitiger Verbindungspool (`mysql2`), SSL über `MYSQL_SSL`
+- **`lib/artikel.ts`** – alle Abfragen für Artikel und Kategorien
 
-- **`utils/supabase/public.ts`** – Zugang für öffentliche Daten, ohne Cookies und Sitzung
-
-Konfiguration über Umgebungsvariablen:
+Konfiguration über Umgebungsvariablen (Vorlage: `.env.example`):
 ```
-NEXT_PUBLIC_SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+MYSQL_HOST
+MYSQL_PORT
+MYSQL_DATABASE
+MYSQL_USER
+MYSQL_PASSWORD
+MYSQL_SSL
 ```
 
 ## 7. Offene Punkte / Bekannte Themen
 
-- **Vercel-Env-Variablen:** `.env*` ist per `.gitignore` ausgeschlossen. Die
-  Supabase-Variablen müssen im Vercel-Dashboard gesetzt sein, sonst schlagen Build
-  und ISR-Aktualisierung fehl.
-- **Leere Startseite ("Für dieses Gewerk sind aktuell keine Anbieter verfügbar"):**
-  Tritt auf, wenn die Supabase-Query keine Daten liefert. Mögliche Ursachen:
-  keine `aktiv`-Anbieter in der DB oder **RLS-Policies** verhindern den
-  anonymen Lesezugriff. Query-Fehler werden im Code derzeit **verschluckt**
-  (kein `error`-Handling) → liefert stillschweigend leere Daten.
-- **Gewerk-Bilder:** laut Git-Historie für 7 von 10 Gewerken vorhanden.
+- **Env-Variablen beim Hosting:** `.env*` ist per `.gitignore` ausgeschlossen
+  (außer `.env.example`). Die MySQL-Variablen müssen beim Hosting gesetzt sein,
+  sonst schlagen Build und ISR-Aktualisierung fehl.
 - **Filterung** könnte bei wachsender Datenmenge auf serverseitige DB-Filterung
   umgestellt werden.
 
 ## 8. Nächste sinnvolle Schritte
 
-1. Env-Variablen in Vercel setzen und Redeploy.
-2. RLS-Policies in Supabase prüfen (anonymer SELECT auf `anbieter`,
-   `kategorien`, `anbieter_kategorien`).
-3. Fehlerbehandlung der Supabase-Queries ergänzen (statt Fehler zu verschlucken).
-4. Restliche Gewerk-Bilder ergänzen.
+1. MySQL-Variablen beim Hosting setzen und Redeploy.
