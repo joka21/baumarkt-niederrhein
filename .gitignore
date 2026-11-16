@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Redaktionsunterlagen (nicht im Repo)
 docs/
+
+# Datenbank-Exporte und Backups (nicht im Repo)
+/backups/
