@@ -16,7 +16,12 @@ APP_REAL="$(pwd -P)"
 PORT="$(tr '\0' '\n' </proc/1/environ | sed -n 's/^PORT=//p')"
 BASE_URL="http://127.0.0.1:${PORT}"
 
-git pull --ff-only
+# Nach dem Pull neu starten: Bash liest sonst weiter die alte Fassung dieses Skripts.
+if [ -z "${BAUMARKT_DEPLOY_NACH_PULL:-}" ]; then
+  git pull --ff-only
+  BAUMARKT_DEPLOY_NACH_PULL=1 exec "$APP_REAL/deploy.sh" "$@"
+fi
+
 # Der Build braucht die devDependencies (z. B. TypeScript), auch bei NODE_ENV=production.
 npm ci --include=dev
 npm run build
