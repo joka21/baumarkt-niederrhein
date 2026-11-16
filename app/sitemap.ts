@@ -12,7 +12,7 @@ export const revalidate = 3600;
 const STAND = {
   fuerBetriebe: "2026-10-08",
   impressum: "2026-10-08",
-  datenschutz: "2026-10-08",
+  datenschutz: "2026-11-16",
   team: "2026-10-27",
 };
 

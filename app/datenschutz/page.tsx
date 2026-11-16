@@ -13,8 +13,6 @@ export const metadata: Metadata = {
 
 // Quelle: Datenschutz-Generator.de (Dr. Thomas Schwenke), Stand 2. Oktober 2026.
 // Übernommen wurden nur die Abschnitte, die auf diese Website zutreffen.
-// OFFEN: Konkrete Angaben zu Vercel (Hosting) und Supabase (Datenbank) fehlen
-// noch und sollten über den Generator ergänzt werden.
 
 const LINK = "text-primary-strong underline underline-offset-2 hover:opacity-80";
 
@@ -420,6 +418,20 @@ const abschnitte: { id: string; titel: string; inhalt: React.ReactNode }[] = [
     ),
   },
   {
+    id: "mittwald",
+    titel: "Hosting",
+    inhalt: (
+      <p className="mt-3">
+        Diese Website wird bei der Mittwald CM Service GmbH &amp; Co. KG, Königsberger Straße 4–6,
+        32339 Espelkamp, gehostet. Wenn Sie die Seite aufrufen, verarbeitet Mittwald in unserem
+        Auftrag technische Zugriffsdaten: Ihre IP-Adresse, Datum und Uhrzeit des Aufrufs, die
+        aufgerufene Seite und Angaben zu Ihrem Browser. Das ist nötig, um die Seite auszuliefern
+        und sicher zu betreiben. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Mit Mittwald
+        besteht ein Vertrag zur Auftragsverarbeitung. Die Server stehen in Deutschland.
+      </p>
+    ),
+  },
+  {
     id: "blog",
     titel: "Blogs und Publikationsmedien",
     inhalt: (
@@ -582,7 +594,7 @@ export default function Datenschutz() {
           Social-Media-Profile (nachfolgend zusammenfassend bezeichnet als „Onlineangebot“).
         </p>
         <p className="mt-4">Die verwendeten Begriffe sind nicht geschlechtsspezifisch.</p>
-        <p className="mt-4">Stand: 2. Oktober 2026</p>
+        <p className="mt-4">Stand: 16. November 2026</p>
 
         <nav aria-labelledby="inhalt-titel" className="mt-10">
           <h2 id="inhalt-titel" className="text-h4">
