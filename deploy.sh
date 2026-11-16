@@ -49,7 +49,10 @@ mittnitectl job start node
 for _ in $(seq 1 30); do
   if curl -fs -o /dev/null --max-time 5 "${BASE_URL}/robots.txt" \
     && curl -fs -o /dev/null --max-time 15 "${BASE_URL}/"; then
-    if mittnitectl job status node | grep -q "(running"; then
+    # Erst in eine Variable: "mittnitectl … | grep -q" endet mit pipefail sonst
+    # mit SIGPIPE (141), sobald grep fündig wird und die Pipe schließt.
+    status="$(mittnitectl job status node 2>&1 || true)"
+    if grep -q "(running" <<<"$status"; then
       echo "Deploy abgeschlossen: $(git rev-parse --short HEAD)"
       exit 0
     fi
