@@ -4,20 +4,40 @@ import mysql, { type Pool, type RowDataPacket } from "mysql2/promise";
 // Serverseitiger Zugriff auf die MySQL-Datenbank (Inhalte der Seite).
 // "server-only" bricht den Build ab, falls die Datei je in Browser-Code landet.
 
+// Eigene Namen mit Präfix BAUMARKT_: Auf dem Mittwald-Server setzt das node-Startskript
+// projektweit MYSQL_* einer anderen App, und Next.js überschreibt gesetzte Variablen nicht.
+// Fehlermeldungen nennen nur den Namen der Variable, nie ihren Wert.
+
 function pflicht(name: string): string {
   const wert = process.env[name];
   if (!wert) throw new Error(`Umgebungsvariable ${name} fehlt.`);
   return wert;
 }
 
+function port(name: string): number {
+  const wert = Number(pflicht(name));
+  if (!Number.isInteger(wert) || wert < 1 || wert > 65535) {
+    throw new Error(`Umgebungsvariable ${name} ist keine gültige Portnummer.`);
+  }
+  return wert;
+}
+
+function schalter(name: string): boolean {
+  const wert = pflicht(name);
+  if (wert !== "true" && wert !== "false") {
+    throw new Error(`Umgebungsvariable ${name} muss "true" oder "false" sein.`);
+  }
+  return wert === "true";
+}
+
 function erzeugePool(): Pool {
   return mysql.createPool({
-    host: pflicht("MYSQL_HOST"),
-    port: Number(process.env.MYSQL_PORT ?? 3306),
-    database: pflicht("MYSQL_DATABASE"),
-    user: pflicht("MYSQL_USER"),
-    password: pflicht("MYSQL_PASSWORD"),
-    ssl: process.env.MYSQL_SSL === "true" ? { rejectUnauthorized: true, minVersion: "TLSv1.2" } : undefined,
+    host: pflicht("BAUMARKT_MYSQL_HOST"),
+    port: port("BAUMARKT_MYSQL_PORT"),
+    database: pflicht("BAUMARKT_MYSQL_DATABASE"),
+    user: pflicht("BAUMARKT_MYSQL_USER"),
+    password: pflicht("BAUMARKT_MYSQL_PASSWORD"),
+    ssl: schalter("BAUMARKT_MYSQL_SSL") ? { rejectUnauthorized: true, minVersion: "TLSv1.2" } : undefined,
     // Zeitstempel als Text lesen: DATETIME-Werte sind UTC, ohne Umrechnung in die lokale Zeitzone.
     dateStrings: true,
     timezone: "Z",

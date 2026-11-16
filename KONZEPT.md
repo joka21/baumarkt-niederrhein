@@ -63,17 +63,17 @@ Das Team steht statisch in `lib/autoren.ts`.
 
 ## 6. Datenbank-Anbindung
 
-- **`lib/db.ts`** – serverseitiger Verbindungspool (`mysql2`), SSL über `MYSQL_SSL`
+- **`lib/db.ts`** – serverseitiger Verbindungspool (`mysql2`), SSL über `BAUMARKT_MYSQL_SSL`
 - **`lib/artikel.ts`** – alle Abfragen für Artikel und Kategorien
 
 Konfiguration über Umgebungsvariablen (Vorlage: `.env.example`):
 ```
-MYSQL_HOST
-MYSQL_PORT
-MYSQL_DATABASE
-MYSQL_USER
-MYSQL_PASSWORD
-MYSQL_SSL
+BAUMARKT_MYSQL_HOST
+BAUMARKT_MYSQL_PORT
+BAUMARKT_MYSQL_DATABASE
+BAUMARKT_MYSQL_USER
+BAUMARKT_MYSQL_PASSWORD
+BAUMARKT_MYSQL_SSL
 ```
 
 ## 7. Offene Punkte / Bekannte Themen
