@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { supabasePublic } from "@/utils/supabase/public";
+import { andereArtikel, artikelNachSlug, artikelSlugs } from "@/lib/artikel";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AutorenBox from "@/components/AutorenBox";
@@ -21,38 +21,11 @@ function formatDatum(wert: string | null): string | null {
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const { data } = await supabasePublic
-    .from("artikel")
-    .select("slug")
-    .eq("status", "veroeffentlicht");
-  return (data ?? []).map((a) => ({ slug: a.slug as string }));
+  const zeilen = await artikelSlugs();
+  return zeilen.map((a) => ({ slug: a.slug }));
 }
 
-type Artikel = {
-  slug: string;
-  titel: string;
-  auszug: string | null;
-  inhalt: string;
-  cover_url: string | null;
-  autor: unknown;
-  kategorie_slug: string | null;
-  veroeffentlicht_am: string | null;
-  aktualisiert_am: string | null;
-  // Optionale SEO-Felder; fehlen sie in der Tabelle, bleibt der Wert undefined.
-  seo_titel?: string | null;
-  seo_beschreibung?: string | null;
-};
-
-// "*" statt Spaltenliste, damit die Seite auch ohne die SEO-Spalten funktioniert.
-async function ladeArtikel(slug: string): Promise<Artikel | null> {
-  const { data } = await supabasePublic
-    .from("artikel")
-    .select("*")
-    .eq("slug", slug)
-    .eq("status", "veroeffentlicht")
-    .maybeSingle();
-  return (data as Artikel | null) ?? null;
-}
+const ladeArtikel = artikelNachSlug;
 
 export async function generateMetadata({
   params,
@@ -103,15 +76,9 @@ export default async function ArtikelSeite({
   const autorText = autorenNamen(autoren);
 
   // Bis zu drei verwandte Artikel: gleiches Gewerk oder gleiche Autorenschaft zuerst.
-  const { data: andereData } = await supabasePublic
-    .from("artikel")
-    .select("slug, titel, autor, kategorie_slug, veroeffentlicht_am")
-    .eq("status", "veroeffentlicht")
-    .neq("slug", slug)
-    .order("veroeffentlicht_am", { ascending: false })
-    .limit(30);
+  const andereData = await andereArtikel(slug);
   const autorSlugs = new Set(autoren.map((a) => a.slug));
-  const verwandt = ((andereData ?? []) as Pick<Artikel, "slug" | "titel" | "autor" | "kategorie_slug">[])
+  const verwandt = andereData
     .map((a) => ({
       ...a,
       punkte:

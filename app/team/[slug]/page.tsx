@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { supabasePublic } from "@/utils/supabase/public";
+import { artikelFuerTeam } from "@/lib/artikel";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
@@ -16,7 +16,7 @@ import {
 
 // Nur die sechs festen Team-Slugs; alles andere liefert 404.
 export const dynamicParams = false;
-// Statisch erzeugt, stündlich aktualisiert (ISR) – die Artikelliste kommt aus Supabase.
+// Statisch erzeugt, stündlich aktualisiert (ISR) – die Artikelliste kommt aus MySQL.
 export const revalidate = 3600;
 
 export function generateStaticParams() {
@@ -65,14 +65,9 @@ export default async function AutorSeite({
   if (!autor) notFound();
 
   // Wenige Artikel – Zuordnung im JS, funktioniert für Text- und Array-Feld.
-  const supabase = supabasePublic;
-  const { data } = await supabase
-    .from("artikel")
-    .select("slug, titel, auszug, autor, veroeffentlicht_am")
-    .eq("status", "veroeffentlicht")
-    .order("veroeffentlicht_am", { ascending: false });
+  const data: ArtikelZeile[] = await artikelFuerTeam();
 
-  const artikel = ((data ?? []) as ArtikelZeile[]).filter((a) =>
+  const artikel = data.filter((a) =>
     autorenAusFeld(a.autor).some((x) => x.slug === autor.slug)
   );
 

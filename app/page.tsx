@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { supabasePublic } from "@/utils/supabase/public";
+import { artikelFuerStartseite, kategorien } from "@/lib/artikel";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TeamKarte from "@/components/TeamKarte";
@@ -74,25 +74,16 @@ function AutorBild({ autor, groesse }: { autor?: Autor; groesse: number }) {
 }
 
 export default async function Home() {
-  const supabase = supabasePublic;
-
-  const [{ data: artikelData }, { data: kategorienData }] = await Promise.all([
-    supabase
-      .from("artikel")
-      .select("slug, titel, auszug, autor, kategorie_slug")
-      .eq("status", "veroeffentlicht")
-      .order("veroeffentlicht_am", { ascending: false })
-      .limit(50),
-    supabase.from("kategorien").select("name, slug"),
+  const [artikelData, kategorienData] = await Promise.all([
+    artikelFuerStartseite(),
+    kategorien(),
   ]);
 
-  const artikel = ((artikelData ?? []) as ArtikelZeile[]).map((a) => ({
+  const artikel = (artikelData as ArtikelZeile[]).map((a) => ({
     ...a,
     autoren: autorenAusFeld(a.autor),
   }));
-  const themaName = new Map(
-    ((kategorienData ?? []) as { name: string; slug: string }[]).map((k) => [k.slug, k.name])
-  );
+  const themaName = new Map(kategorienData.map((k) => [k.slug, k.name]));
 
   const staedte = getLiveStaedte();
   const frageDerWoche = artikel.find((a) => a.autoren.length > 1);

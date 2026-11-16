@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { supabasePublic } from "@/utils/supabase/public";
+import { artikelUebersicht } from "@/lib/artikel";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -32,15 +32,7 @@ type ArtikelKarte = {
 };
 
 export default async function RatgeberUebersicht() {
-  const supabase = supabasePublic;
-
-  const { data } = await supabase
-    .from("artikel")
-    .select("slug, titel, auszug, cover_url, veroeffentlicht_am")
-    .eq("status", "veroeffentlicht")
-    .order("veroeffentlicht_am", { ascending: false });
-
-  const artikel = (data ?? []) as ArtikelKarte[];
+  const artikel: ArtikelKarte[] = await artikelUebersicht();
 
   return (
     <>

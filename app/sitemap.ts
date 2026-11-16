@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { supabasePublic } from "@/utils/supabase/public";
+import { artikelFuerSitemap } from "@/lib/artikel";
 import { AUTOREN, autorenAusFeld } from "@/lib/autoren";
 import { alleSeiten as altbauSeiten } from "@/lib/altbau";
 
@@ -22,13 +22,10 @@ const spaetestes = (...daten: (string | null | undefined)[]) =>
 // Anbieterseiten (/anbieter/[slug]) stehen bewusst nicht in der Sitemap –
 // sie sind noindex, follow (siehe app/anbieter/[slug]/page.tsx).
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { data } = await supabasePublic
-    .from("artikel")
-    .select("slug, autor, veroeffentlicht_am, aktualisiert_am")
-    .eq("status", "veroeffentlicht");
+  const data = await artikelFuerSitemap();
 
-  const artikel = (data ?? []).map((a) => ({
-    slug: a.slug as string,
+  const artikel = data.map((a) => ({
+    slug: a.slug,
     autoren: autorenAusFeld(a.autor),
     stand: spaetestes(a.veroeffentlicht_am, a.aktualisiert_am),
   }));
