@@ -7,6 +7,10 @@ export type Nutzung = "selbst" | "vermietet";
 export type Alter = "jung" | "mittel" | "alt";
 export type Massnahme = "heizung" | "dach" | "fassade" | "decke" | "fenster";
 export type JaNeinWeissNicht = "ja" | "nein" | "weissNicht";
+/** Welche Heizung wird ersetzt (Frage E5)? fossil = Öl, Kohle, Gas-Etagenheizung oder
+ *  Nachtspeicher; gasBiomasseAlt/-Jung = Gas, Holz oder Pellets ab bzw. unter
+ *  HEIZUNG.klimabonusMindestalterJahre. */
+export type AlteHeizung = "fossil" | "gasBiomasseAlt" | "gasBiomasseJung" | "andere" | "weissNicht";
 export type Einkommen = "bis30" | "bis40" | "bis50" | "bis60" | "ueber60" | "keineAngabe";
 
 export type Antworten = {
@@ -14,7 +18,9 @@ export type Antworten = {
   e2?: Alter;
   e3?: Massnahme[];
   e4?: number;
-  e5?: JaNeinWeissNicht;
+  e5?: AlteHeizung;
+  /** Funktioniert die alte Heizung noch? */
+  e5b?: boolean;
   e6?: Einkommen;
   e7?: boolean;
   e8?: number;
@@ -24,7 +30,9 @@ export type Antworten = {
 
 export type FrageId = keyof Antworten;
 
-export const REIHENFOLGE: FrageId[] = ["e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9", "e10"];
+export const REIHENFOLGE: FrageId[] = [
+  "e1", "e2", "e3", "e4", "e5", "e5b", "e6", "e7", "e8", "e9", "e10",
+];
 
 export const HUELLEN_MASSNAHMEN: Massnahme[] = ["dach", "fassade", "decke", "fenster"];
 
@@ -60,6 +68,9 @@ export function wirdGefragt(id: FrageId, a: Antworten): boolean {
     case "e5":
     case "e6":
       return mitHeizung(a) && selbst;
+    case "e5b":
+      // Nur, wenn die Art der alten Heizung den Klimabonus zulässt.
+      return mitHeizung(a) && selbst && (a.e5 === "fossil" || a.e5 === "gasBiomasseAlt");
     case "e7":
       // Nur, wenn ein Kind den Bonus ändern kann.
       return (
@@ -71,6 +82,15 @@ export function wirdGefragt(id: FrageId, a: Antworten): boolean {
     case "e10":
       return a.e3?.includes("dach") ?? false;
   }
+}
+
+/** Klimabonus aus E5 und E5b: ja nur, wenn die Art passt und die alte Heizung noch
+ *  funktioniert; "weiß nicht" bei E5 ergibt eine Spanne. */
+export function klimabonusAntwort(a: Antworten): JaNeinWeissNicht | undefined {
+  if (a.e5 === undefined) return undefined;
+  if (a.e5 === "weissNicht") return "weissNicht";
+  if (a.e5 === "fossil" || a.e5 === "gasBiomasseAlt") return a.e5b === true ? "ja" : "nein";
+  return "nein";
 }
 
 /** Die gestellten Fragen in Reihenfolge. */

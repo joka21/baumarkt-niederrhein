@@ -44,3 +44,23 @@ describe("Kostenfelder", () => {
     expect(betragGueltig(1_000.5)).toBe(false);
   });
 });
+
+describe("Frage E5b (funktioniert die alte Heizung noch?)", () => {
+  const basis = { e1: "selbst", e2: "alt", e3: ["heizung"] } as const;
+  it("wird nur gefragt, wenn die Art der alten Heizung den Bonus zulässt", () => {
+    expect(gestellteFragen({ ...basis, e3: ["heizung"], e5: "fossil" })).toContain("e5b");
+    expect(gestellteFragen({ ...basis, e3: ["heizung"], e5: "gasBiomasseAlt" })).toContain("e5b");
+    expect(gestellteFragen({ ...basis, e3: ["heizung"], e5: "gasBiomasseJung" })).not.toContain("e5b");
+    expect(gestellteFragen({ ...basis, e3: ["heizung"], e5: "andere" })).not.toContain("e5b");
+    expect(gestellteFragen({ ...basis, e3: ["heizung"], e5: "weissNicht" })).not.toContain("e5b");
+  });
+  it("steht direkt nach E5", () => {
+    const f = gestellteFragen({ ...basis, e3: ["heizung"], e5: "fossil", e6: "bis40" });
+    expect(f.slice(f.indexOf("e5"), f.indexOf("e5") + 3)).toEqual(["e5", "e5b", "e6"]);
+  });
+  it("vermietet: weder E5 noch E5b", () => {
+    const f = gestellteFragen({ e1: "vermietet", e2: "alt", e3: ["heizung"], e5: "fossil" });
+    expect(f).not.toContain("e5");
+    expect(f).not.toContain("e5b");
+  });
+});

@@ -40,6 +40,9 @@ export const HEIZUNG = {
     { wert: 16, von: "2026-07-21", bis: "2027-01-31" },
     { wert: 12, von: "2027-02-01", bis: "2027-07-31" },
   ],
+  /** Klimabonus bei Gas- und Biomasseheizung (keine Etagenheizung): Inbetriebnahme
+   *  mindestens so viele Jahre zurück (Frage E5) */
+  klimabonusMindestalterJahre: [{ wert: 20, von: "2026-07-21" }],
   /** Einkommensbonus nach zu versteuerndem Haushaltseinkommen */
   einkommensbonus: [
     {

@@ -49,6 +49,8 @@ function einkommensOptionen(): Option[] {
 // Altersgrenzen der Frage E2 aus den Parametern (Stand der Regeln).
 const BESTAND_JAHRE = wertAm(GEBAEUDE.mindestalterBestandJahre, STAND_DER_REGELN) ?? 0;
 const STEUER_JAHRE = wertAm(STEUER.mindestalterJahre, STAND_DER_REGELN) ?? 0;
+// Altersgrenze der alten Gas- und Biomasseheizung für den Klimabonus (Frage E5).
+const KLIMA_JAHRE = wertAm(HEIZUNG.klimabonusMindestalterJahre, STAND_DER_REGELN) ?? 0;
 
 const AUSWAHL: Partial<
   Record<FrageId, { frage: string; optionen: Option[]; mehrfach?: boolean; hinweis?: string }>
@@ -81,19 +83,29 @@ const AUSWAHL: Partial<
     ],
   },
   e5: {
-    frage:
-      "Ersetzt du eine funktionierende Öl-, Kohle-, Gasetagen- oder Nachtspeicherheizung oder eine mindestens 20 Jahre alte Gasheizung?",
+    frage: "Welche Heizung ersetzt du?",
     optionen: [
-      { wert: "ja", label: "ja" },
-      { wert: "nein", label: "nein" },
+      { wert: "fossil", label: "Öl, Kohle, Gas-Etagenheizung oder Nachtspeicher" },
+      { wert: "gasBiomasseAlt", label: `Gas, Holz oder Pellets, ${KLIMA_JAHRE} Jahre oder älter` },
+      { wert: "gasBiomasseJung", label: `Gas, Holz oder Pellets, jünger als ${KLIMA_JAHRE} Jahre` },
+      { wert: "andere", label: "eine andere Heizung" },
       { wert: "weissNicht", label: "weiß nicht" },
     ],
+  },
+  e5b: {
+    frage: "Funktioniert die alte Heizung noch?",
+    hinweis: "Den Bonus gibt es nur, wenn die alte Heizung noch läuft.",
+    optionen: JA_NEIN,
   },
   e6: {
     frage: "Wie hoch ist das zu versteuernde Haushaltseinkommen im Jahr?",
     optionen: einkommensOptionen(),
   },
-  e7: { frage: "Lebt ein Kind unter 18 im Haushalt?", optionen: JA_NEIN },
+  e7: {
+    frage: "Lebt ein Kind unter 18 bei dir, für das Kindergeld gezahlt wird?",
+    hinweis: "Das Kind muss mit Hauptwohnsitz bei dir wohnen. Der Zuschlag gilt einmal, egal wie viele Kinder.",
+    optionen: JA_NEIN,
+  },
   e9: {
     frage: "Hast du einen Sanierungsfahrplan (iSFP) oder lässt du einen erstellen?",
     optionen: JA_NEIN,
@@ -121,7 +133,7 @@ function alsAuswahl(id: FrageId, a: Antworten): string[] {
 /** Auswahl zurück in den Antworttyp. */
 function ausAuswahl(id: FrageId, werte: string[]): Partial<Antworten> {
   if (id === "e3") return { e3: werte as Antworten["e3"] };
-  if (id === "e7" || id === "e9" || id === "e10") return { [id]: werte[0] === "ja" };
+  if (id === "e5b" || id === "e7" || id === "e9" || id === "e10") return { [id]: werte[0] === "ja" };
   return { [id]: werte[0] };
 }
 

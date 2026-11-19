@@ -11,15 +11,23 @@ function ergebnis(a: Antworten, datum = STAND) {
   return e;
 }
 
+// Klimabonus der Prüffälle als Antworten auf E5/E5b: ja = funktionierende Ölheizung,
+// nein = andere Heizung, weiß nicht = E5 "weiß nicht".
+const KLIMA: Record<"ja" | "nein" | "weissNicht", Pick<Antworten, "e5" | "e5b">> = {
+  ja: { e5: "fossil", e5b: true },
+  nein: { e5: "andere" },
+  weissNicht: { e5: "weissNicht" },
+};
+
 // Heizung, selbst bewohnt. Gebäudealter 5 bis 10 Jahre, wenn der Prüffall keins nennt.
 function heizung(
   kosten: number,
-  klima: Antworten["e5"],
+  klima: keyof typeof KLIMA,
   einkommen: Antworten["e6"],
   kind?: boolean,
   e2: Antworten["e2"] = "mittel"
 ): Antworten {
-  return { e1: "selbst", e2, e3: ["heizung"], e4: kosten, e5: klima, e6: einkommen, e7: kind };
+  return { e1: "selbst", e2, e3: ["heizung"], e4: kosten, ...KLIMA[klima], e6: einkommen, e7: kind };
 }
 
 function huelle(kosten: number, isfp: boolean, e2: Antworten["e2"] = "mittel"): Antworten {
@@ -250,5 +258,32 @@ describe("Angekündigte Änderungen ohne Datum: nur Hinweis, keine Rechnung", ()
 
   it("Dämmbonus ändert den Zuschuss nicht (P9 weiter 8.500 €)", () => {
     expect(ergebnis(huelle(50_000, true, "alt")).huelle?.zuschuss).toBe(8_500);
+  });
+});
+
+describe("Klimabonus aus E5 (Art der alten Heizung) und E5b (funktioniert noch)", () => {
+  // Heizung 28.000 €, Einkommen über 60.000 €: ohne Bonus 30 %, mit Bonus 46 %.
+  const mit = (e5: Antworten["e5"], e5b?: boolean) =>
+    ergebnis({ e1: "selbst", e2: "alt", e3: ["heizung"], e4: 28_000, e5, e5b, e6: "ueber60" })
+      .heizung?.satz;
+
+  it("Öl, Kohle, Gas-Etagenheizung oder Nachtspeicher, funktioniert: Bonus", () => {
+    expect(mit("fossil", true)).toEqual({ von: 46, bis: 46 });
+  });
+  it("Gas, Holz oder Pellets, 20 Jahre oder älter, funktioniert: Bonus", () => {
+    expect(mit("gasBiomasseAlt", true)).toEqual({ von: 46, bis: 46 });
+  });
+  it("Passende Art, aber funktioniert nicht mehr: kein Bonus", () => {
+    expect(mit("fossil", false)).toEqual({ von: 30, bis: 30 });
+    expect(mit("gasBiomasseAlt", false)).toEqual({ von: 30, bis: 30 });
+  });
+  it("Gas, Holz oder Pellets jünger als 20 Jahre oder andere Heizung: kein Bonus", () => {
+    expect(mit("gasBiomasseJung")).toEqual({ von: 30, bis: 30 });
+    expect(mit("andere")).toEqual({ von: 30, bis: 30 });
+    // Eine alte Antwort auf E5b zählt nicht, wenn E5b nicht gefragt wird.
+    expect(mit("gasBiomasseJung", true)).toEqual({ von: 30, bis: 30 });
+  });
+  it("Weiß nicht: Spanne ohne bis mit Bonus", () => {
+    expect(mit("weissNicht")).toEqual({ von: 30, bis: 46 });
   });
 });

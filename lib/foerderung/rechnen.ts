@@ -2,7 +2,7 @@
 // Eingabe: Antworten und Datum (ISO "JJJJ-MM-TT"). Ausgabe: ein Ergebnisobjekt.
 // Alle Zahlen kommen aus parameter.ts. Beträge werden auf ganze Euro abgerundet.
 
-import { bereinigen, mitHeizung, mitHuelle, type Antworten } from "./fragen";
+import { bereinigen, klimabonusAntwort, mitHeizung, mitHuelle, type Antworten } from "./fragen";
 import {
   ANGEKUENDIGT,
   HEIZUNG,
@@ -143,8 +143,9 @@ function einkommensbonus(a: Antworten, datum: string): number[] {
 
 function klimaOptionen(a: Antworten): boolean[] {
   if (a.e1 !== "selbst") return [false];
-  if (a.e5 === "ja") return [true];
-  if (a.e5 === "weissNicht") return [false, true];
+  const klima = klimabonusAntwort(a);
+  if (klima === "ja") return [true];
+  if (klima === "weissNicht") return [false, true];
   return [false];
 }
 
@@ -266,7 +267,7 @@ function tippsErmitteln(a: Antworten, datum: string, heizung?: HeizungsBlock): T
     const z = (klimabonus: boolean, eb: number) =>
       anteil(heizung.anrechenbar, heizungsSatz({ selbst: true, klimabonus, einkommensbonus: eb }, datum));
 
-    if (a.e5 === "weissNicht") {
+    if (klimabonusAntwort(a) === "weissNicht") {
       const eb = Math.min(...bonus);
       const mehr = z(true, eb) - z(false, eb);
       if (mehr > 0) tipps.push({ art: "klimabonus", mehr });
