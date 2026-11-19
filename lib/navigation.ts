@@ -1,4 +1,5 @@
 import { getLiveStaedte } from "@/lib/staedte";
+import { FOERDERRECHNER_OEFFENTLICH, FOERDERRECHNER_URL } from "@/lib/foerderung/sichtbarkeit";
 
 export type NavLink = { label: string; href: string };
 
@@ -9,6 +10,7 @@ export function getHauptmenue(): NavLink[] {
       ? [{ label: "Baumärkte", href: "/#baumaerkte" }]
       : []),
     { label: "Altbau sanieren", href: "/altbau-sanieren" },
+    ...(FOERDERRECHNER_OEFFENTLICH ? [{ label: "Förderrechner", href: FOERDERRECHNER_URL }] : []),
     { label: "Ratgeber", href: "/ratgeber" },
     { label: "Team", href: "/team" },
     { label: "Für Betriebe", href: "/fuer-anbieter" },

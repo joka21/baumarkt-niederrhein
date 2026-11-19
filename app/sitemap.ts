@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { artikelFuerSitemap } from "@/lib/artikel";
 import { AUTOREN, autorenAusFeld } from "@/lib/autoren";
 import { alleSeiten as altbauSeiten } from "@/lib/altbau";
+import { FOERDERRECHNER_OEFFENTLICH, FOERDERRECHNER_URL } from "@/lib/foerderung/sichtbarkeit";
+import { STAND_DER_REGELN } from "@/lib/foerderung/parameter";
 
 const BASE_URL = "https://www.baumarkt-niederrhein.de";
 
@@ -36,6 +38,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...altbauSeiten()
       .sort((a, b) => a.url.localeCompare(b.url))
       .map((s) => ({ url: `${BASE_URL}${s.url}`, lastModified: s.stand })),
+    ...(FOERDERRECHNER_OEFFENTLICH
+      ? [{ url: `${BASE_URL}${FOERDERRECHNER_URL}`, lastModified: STAND_DER_REGELN }]
+      : []),
     { url: `${BASE_URL}/team`, lastModified: STAND.team },
     ...AUTOREN.map((autor) => ({
       url: `${BASE_URL}/team/${autor.slug}`,
