@@ -140,6 +140,7 @@ export default function Foerderrechner({ seiten }: { seiten: ZielSeite[] }) {
 
   const rahmen = useRef<HTMLDivElement>(null);
   const ueberschrift = useRef<HTMLHeadingElement>(null);
+  const knoepfe = useRef<HTMLDivElement>(null);
   const ersterLauf = useRef(true);
 
   // Beim Wechsel der Frage (nicht beim Laden): Rechner direkt unter die Kopfzeile scrollen,
@@ -165,6 +166,18 @@ export default function Foerderrechner({ seiten }: { seiten: ZielSeite[] }) {
   function aendern(teil: Partial<Antworten>) {
     setFehler(null);
     setAntworten((a) => ({ ...a, ...teil }));
+  }
+
+  // Erste Frage: Über dem Rechner stehen Überschrift und Einleitung. Wird eine Antwort
+  // angetippt und die Knöpfe sind nicht im Bild, Rechner unter die Kopfzeile scrollen –
+  // bei "Bewegung reduzieren" ohne Animation.
+  function knoepfeZeigen() {
+    requestAnimationFrame(() => {
+      const unten = knoepfe.current?.getBoundingClientRect().bottom;
+      if (unten === undefined || unten <= window.innerHeight) return;
+      const ruhig = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      rahmen.current?.scrollIntoView({ block: "start", behavior: ruhig ? "auto" : "smooth" });
+    });
   }
 
   function weiter() {
@@ -281,7 +294,10 @@ export default function Foerderrechner({ seiten }: { seiten: ZielSeite[] }) {
             optionen={auswahl.optionen}
             mehrfach={auswahl.mehrfach}
             ausgewaehlt={alsAuswahl(frageId, antworten)}
-            onChange={(werte) => aendern(ausAuswahl(frageId, werte))}
+            onChange={(werte) => {
+              aendern(ausAuswahl(frageId, werte));
+              if (frageId === "e1") knoepfeZeigen();
+            }}
             fehlerId={fehlerId}
             ueberschriftRef={ueberschrift}
           />
@@ -308,7 +324,7 @@ export default function Foerderrechner({ seiten }: { seiten: ZielSeite[] }) {
         {fehler}
       </p>
 
-      <div className="mt-3 flex justify-between gap-3">
+      <div ref={knoepfe} className="mt-3 flex justify-between gap-3">
         {index > 0 ? (
           <button type="button" onClick={zurueck} className={KNOPF_SEKUNDAER}>
             Zurück

@@ -227,8 +227,8 @@ function Hinweise({ daten }: { daten: Daten }) {
       ) : (
         <>
           <strong>NRW.BANK-Eigentumsförderung Modernisierung:</strong> Landesdarlehen für Haushalte
-          mit geringerem Einkommen. Die aktuellen Konditionen kennen wir noch nicht. Antrag bei
-          Stadt oder Kreis, vor Beginn. {chancen}
+          mit geringerem Einkommen. Die Konditionen für das laufende Jahr liegen uns noch nicht
+          vor. Antrag bei Stadt oder Kreis, vor Beginn. {chancen}
         </>
       ),
     });
