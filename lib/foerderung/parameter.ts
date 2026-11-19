@@ -43,6 +43,8 @@ export const HEIZUNG = {
   /** Klimabonus bei Gas- und Biomasseheizung (keine Etagenheizung): Inbetriebnahme
    *  mindestens so viele Jahre zurück (Frage E5) */
   klimabonusMindestalterJahre: [{ wert: 20, von: "2026-07-21" }],
+  /** Familienzuschlag: Kind jünger als so viele Jahre, mit Kindergeld (Frage E7) */
+  familienzuschlagKindUnterJahren: [{ wert: 18, von: "2026-07-21" }],
   /** Einkommensbonus nach zu versteuerndem Haushaltseinkommen */
   einkommensbonus: [
     {

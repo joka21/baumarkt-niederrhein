@@ -287,3 +287,28 @@ describe("Klimabonus aus E5 (Art der alten Heizung) und E5b (funktioniert noch)"
     expect(mit("weissNicht")).toEqual({ von: 30, bis: 46 });
   });
 });
+
+describe("Hinweis H4 nach Block", () => {
+  const h4 = (a: Antworten) => {
+    const { h4Heizung, h4Huelle, h4NrwBank } = ergebnis(a).hinweise;
+    return { h4Heizung, h4Huelle, h4NrwBank };
+  };
+
+  it("Nur Heizung, selbst bewohnt: Teil KfW und NRW.BANK", () => {
+    expect(h4(heizung(20_000, "nein", "ueber60"))).toEqual({
+      h4Heizung: true,
+      h4Huelle: false,
+      h4NrwBank: true,
+    });
+  });
+
+  it("Nur Gebäudehülle, selbst bewohnt: Teil BAFA und NRW.BANK", () => {
+    expect(h4(huelle(20_000, true))).toEqual({ h4Heizung: false, h4Huelle: true, h4NrwBank: true });
+  });
+
+  it("Heizung und Hülle, vermietet: Teil KfW und BAFA, kein NRW.BANK", () => {
+    expect(
+      h4({ e1: "vermietet", e2: "alt", e3: ["heizung", "fenster"], e4: 20_000, e8: 20_000, e9: false })
+    ).toEqual({ h4Heizung: true, h4Huelle: true, h4NrwBank: false });
+  });
+});

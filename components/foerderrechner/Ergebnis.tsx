@@ -261,16 +261,40 @@ function Hinweise({ daten }: { daten: Daten }) {
       ),
     });
   }
-  punkte.push({
-    key: "h4",
-    inhalt: (
-      <>
-        <strong>Kein fester Auftrag vor dem Antrag.</strong> Bei KfW und BAFA gehört in den Vertrag
-        mit dem Handwerker ein Fördervorbehalt, der sich nicht nachträglich ergänzen lässt. Bei der
-        NRW.BANK erst nach der Bewilligung beginnen.
-      </>
-    ),
-  });
+  if (h.h4Heizung) {
+    punkte.push({
+      key: "h4-heizung",
+      inhalt: (
+        <>
+          <strong>Heizung (KfW):</strong> Schließ den Vertrag mit dem Betrieb vor dem Antrag, aber
+          nur mit Fördervorbehalt: Er gilt erst, wenn die KfW zusagt. Im Vertrag muss auch stehen,
+          wann die Arbeiten voraussichtlich umgesetzt werden. Ein Vertrag ohne Vorbehalt oder ein
+          Beginn der Arbeiten vor dem Antrag schließt die Förderung aus.
+        </>
+      ),
+    });
+  }
+  if (h.h4Huelle) {
+    punkte.push({
+      key: "h4-huelle",
+      inhalt: (
+        <>
+          <strong>Dämmung, Fenster und Türen (BAFA):</strong> Kein Auftrag ohne Fördervorbehalt und
+          kein Beginn der Arbeiten vor dem Antrag. Die Einzelheiten nennt das BAFA.
+        </>
+      ),
+    });
+  }
+  if (h.h4NrwBank) {
+    punkte.push({
+      key: "h4-nrwbank",
+      inhalt: (
+        <>
+          <strong>NRW.BANK:</strong> Erst nach der Bewilligung beginnen.
+        </>
+      ),
+    });
+  }
   if (h.nebenfoerderung && beratung && begleitung) {
     punkte.push({
       key: "neben",

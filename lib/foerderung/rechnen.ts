@@ -69,8 +69,12 @@ export type Hinweise = {
   h2: boolean;
   /** Solarpflicht NRW */
   h3: boolean;
-  /** Kein Auftrag vor dem Antrag – immer */
-  h4: true;
+  /** Vertrag und Beginn vor dem Antrag: Teil Heizung (KfW), wenn eine Heizung gerechnet wurde */
+  h4Heizung: boolean;
+  /** Teil Gebäudehülle (BAFA), wenn die Hülle gerechnet wurde */
+  h4Huelle: boolean;
+  /** Teil NRW.BANK, bei selbst bewohnt */
+  h4NrwBank: boolean;
   /** Energieberatung und Baubegleitung, bei Hüllenmaßnahmen */
   nebenfoerderung: boolean;
   /** Angekündigte Wärmepumpen-Förderung, wenn eine Heizung gerechnet wurde (ohne Datum) */
@@ -325,7 +329,9 @@ export function rechnen(antworten: Antworten, datum: string): Ergebnis {
       h1: selbst,
       h2: selbst,
       h3: (a.e3?.includes("dach") ?? false) && a.e10 === true,
-      h4: true,
+      h4Heizung: heizung !== undefined,
+      h4Huelle: huelle !== undefined,
+      h4NrwBank: selbst,
       nebenfoerderung: mitHuelle(a),
       waermepumpeAngekuendigt: heizung !== undefined && ANGEKUENDIGT.waermepumpe.startdatum === null,
       daemmbonusAngekuendigt:

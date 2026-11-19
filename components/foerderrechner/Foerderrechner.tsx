@@ -49,6 +49,8 @@ function einkommensOptionen(): Option[] {
 // Altersgrenzen der Frage E2 aus den Parametern (Stand der Regeln).
 const BESTAND_JAHRE = wertAm(GEBAEUDE.mindestalterBestandJahre, STAND_DER_REGELN) ?? 0;
 const STEUER_JAHRE = wertAm(STEUER.mindestalterJahre, STAND_DER_REGELN) ?? 0;
+// Altersgrenze des Kindes für den Familienzuschlag (Frage E7).
+const KIND_JAHRE = wertAm(HEIZUNG.familienzuschlagKindUnterJahren, STAND_DER_REGELN) ?? 0;
 // Altersgrenze der alten Gas- und Biomasseheizung für den Klimabonus (Frage E5).
 const KLIMA_JAHRE = wertAm(HEIZUNG.klimabonusMindestalterJahre, STAND_DER_REGELN) ?? 0;
 
@@ -102,7 +104,7 @@ const AUSWAHL: Partial<
     optionen: einkommensOptionen(),
   },
   e7: {
-    frage: "Lebt ein Kind unter 18 bei dir, für das Kindergeld gezahlt wird?",
+    frage: `Lebt ein Kind unter ${KIND_JAHRE} bei dir, für das Kindergeld gezahlt wird?`,
     hinweis: "Das Kind muss mit Hauptwohnsitz bei dir wohnen. Der Zuschlag gilt einmal, egal wie viele Kinder.",
     optionen: JA_NEIN,
   },
