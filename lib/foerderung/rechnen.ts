@@ -4,6 +4,7 @@
 
 import { bereinigen, mitHeizung, mitHuelle, type Antworten } from "./fragen";
 import {
+  ANGEKUENDIGT,
   HEIZUNG,
   HUELLE,
   RECHENPARAMETER,
@@ -72,6 +73,10 @@ export type Hinweise = {
   h4: true;
   /** Energieberatung und Baubegleitung, bei Hüllenmaßnahmen */
   nebenfoerderung: boolean;
+  /** Angekündigte Wärmepumpen-Förderung, wenn eine Heizung gerechnet wurde (ohne Datum) */
+  waermepumpeAngekuendigt: boolean;
+  /** Angekündigter Dämmbonus, bei Dämmung mit Sanierungsfahrplan (ohne Datum) */
+  daemmbonusAngekuendigt: boolean;
 };
 
 export type Ergebnis =
@@ -305,6 +310,7 @@ export function rechnen(antworten: Antworten, datum: string): Ergebnis {
   const steuer = steuerMoeglich && posten.length > 0 ? steuerBloecke(posten, datum) : undefined;
 
   const selbst = a.e1 === "selbst";
+  const daemmung = a.e3?.some((m) => m === "dach" || m === "fassade" || m === "decke") ?? false;
   return {
     art: "ergebnis",
     datum,
@@ -320,6 +326,9 @@ export function rechnen(antworten: Antworten, datum: string): Ergebnis {
       h3: (a.e3?.includes("dach") ?? false) && a.e10 === true,
       h4: true,
       nebenfoerderung: mitHuelle(a),
+      waermepumpeAngekuendigt: heizung !== undefined && ANGEKUENDIGT.waermepumpe.startdatum === null,
+      daemmbonusAngekuendigt:
+        daemmung && a.e9 === true && ANGEKUENDIGT.daemmbonus.startdatum === null,
     },
   };
 }

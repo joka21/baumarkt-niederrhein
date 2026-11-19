@@ -220,3 +220,35 @@ describe("Weitere Regeln", () => {
     expect(e.summe.bis).toBe(8_400);
   });
 });
+
+describe("Angekündigte Änderungen ohne Datum: nur Hinweis, keine Rechnung", () => {
+  it("Wärmepumpen-Hinweis, sobald eine Heizung gerechnet wurde", () => {
+    expect(ergebnis(heizung(32_000, "ja", "bis30", false)).hinweise.waermepumpeAngekuendigt).toBe(true);
+    expect(
+      ergebnis({ e1: "vermietet", e2: "alt", e3: ["heizung"], e4: 20_000 }).hinweise
+        .waermepumpeAngekuendigt
+    ).toBe(true);
+    expect(ergebnis(huelle(20_000, true)).hinweise.waermepumpeAngekuendigt).toBe(false);
+  });
+
+  it("Rechnung bleibt beim heutigen Satz (P1 weiter 22.400 €, P2 weiter 8.400 €)", () => {
+    expect(ergebnis(heizung(32_000, "ja", "bis30", false)).summe.bis).toBe(22_400);
+    expect(ergebnis(heizung(32_000, "nein", "ueber60")).summe.bis).toBe(8_400);
+  });
+
+  it("Dämmbonus-Hinweis nur bei Dämmung mit Sanierungsfahrplan", () => {
+    const mit = (e3: Antworten["e3"], isfp: boolean) =>
+      ergebnis({ e1: "selbst", e2: "alt", e3, e8: 40_000, e9: isfp, e10: false }).hinweise
+        .daemmbonusAngekuendigt;
+    expect(mit(["fassade"], true)).toBe(true);
+    expect(mit(["dach"], true)).toBe(true);
+    expect(mit(["decke"], true)).toBe(true);
+    expect(mit(["fenster", "dach"], true)).toBe(true);
+    expect(mit(["fenster"], true)).toBe(false);
+    expect(mit(["fassade"], false)).toBe(false);
+  });
+
+  it("Dämmbonus ändert den Zuschuss nicht (P9 weiter 8.500 €)", () => {
+    expect(ergebnis(huelle(50_000, true, "alt")).huelle?.zuschuss).toBe(8_500);
+  });
+});

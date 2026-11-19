@@ -5,6 +5,8 @@ import type { Ref } from "react";
 import type { Antworten } from "@/lib/foerderung/fragen";
 import { datum, euro, euroSpanne, prozent, zahlwort } from "@/lib/foerderung/format";
 import {
+  ANGEKUENDIGT,
+  HEIZUNG,
   NEBENFOERDERUNG,
   NRW_BANK,
   NRW_BANK_CHANCENPRUEFER,
@@ -279,6 +281,33 @@ function Hinweise({ daten }: { daten: Daten }) {
           Fachplanung und Baubegleitung mit {prozent(begleitung.satz)} von höchstens{" "}
           {euro(begleitung.kostenHoechstens)} Kosten, also bis{" "}
           {euro(Math.floor((begleitung.kostenHoechstens * begleitung.satz) / 100))}.
+        </>
+      ),
+    });
+  }
+  const grundHeute = wertAm(HEIZUNG.grundfoerderung, daten.datum);
+  if (h.waermepumpeAngekuendigt && grundHeute !== undefined) {
+    const wp = ANGEKUENDIGT.waermepumpe;
+    punkte.push({
+      key: "waermepumpe",
+      inhalt: (
+        <>
+          Im {wp.zeitraum} soll sich die Förderung für Wärmepumpen ändern:{" "}
+          {prozent(wp.grundfoerderung)} Grundförderung für alle, dazu{" "}
+          {prozent(wp.wertschoepfungsbonus)} Bonus für Geräte aus der EU. Ein Datum steht noch
+          nicht fest. Bis dahin rechnen wir mit {prozent(grundHeute)}.
+        </>
+      ),
+    });
+  }
+  if (h.daemmbonusAngekuendigt) {
+    const db = ANGEKUENDIGT.daemmbonus;
+    punkte.push({
+      key: "daemmbonus",
+      inhalt: (
+        <>
+          Voraussichtlich ab dem {db.zeitraum} gibt es {prozent(db.bonus)} zusätzlich für die
+          Dämmung besonders schlecht gedämmter Häuser. Das gilt nicht für Fenster.
         </>
       ),
     });

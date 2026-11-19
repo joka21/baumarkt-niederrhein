@@ -134,6 +134,33 @@ export const SOLARPFLICHT = {
 } satisfies Record<string, Zeitwert<unknown>[]>;
 
 // ---------------------------------------------------------------------------
+// Angekündigte Änderungen ohne festes Datum.
+// Solange "startdatum" null ist, wird damit NICHT gerechnet; das Ergebnis zeigt nur einen
+// Hinweis. Steht ein Datum fest, muss zuerst die Rechnung erweitert werden (der Rechner
+// fragt die Art der neuen Heizung bisher nicht ab) – erst danach das Datum eintragen.
+
+export const ANGEKUENDIGT = {
+  /** KfW 458: neue Förderung für Wärmepumpen */
+  waermepumpe: {
+    startdatum: null as string | null,
+    /** erwarteter Zeitraum für den Hinweistext ("Im …") */
+    zeitraum: "ersten Quartal 2027",
+    /** Grundförderung neu in Prozentpunkten, für alle */
+    grundfoerderung: 15,
+    /** Bonus für Geräte aus der EU in Prozentpunkten */
+    wertschoepfungsbonus: 15,
+  },
+  /** BAFA: Bonus für die Dämmung besonders schlecht gedämmter Häuser, nicht für Fenster */
+  daemmbonus: {
+    startdatum: null as string | null,
+    /** erwarteter Zeitraum für den Hinweistext ("ab dem …") */
+    zeitraum: "ersten Quartal 2027",
+    /** zusätzlicher Fördersatz in Prozent */
+    bonus: 5,
+  },
+};
+
+// ---------------------------------------------------------------------------
 // Richtwerte zum Antippen in den Kostenfeldern (Euro, keine Förderzahlen)
 
 export const RICHTWERTE = {
