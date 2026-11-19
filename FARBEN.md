@@ -49,7 +49,6 @@ In Figma vorhanden, aber nicht als Token übernommen: `Color/Accent` `#ffa629`.
 | `app/opengraph-image.tsx`           | `rgba(255,255,255,0.18)` | halbtransparente Fläche hinter dem Logo |
 | `lib/icon-bild.tsx`                 | `#047857`, `#ffffff`     | Favicon/Apple-Icon (Bildgenerierung, keine CSS-Klassen möglich) |
 | `components/TeamKarte.tsx`          | Schatten `rgba(0,0,0,0.08)` | Schattenwert aus Figma               |
-| `components/CategoryBar.tsx`        | `white` in SVG-Icons     | Komponente derzeit ungenutzt            |
 
 ## 2. Schriften
 

@@ -42,7 +42,6 @@ werden können.
 ## 4. Komponenten
 
 - **`Header`** – globale Kopfzeile / Navigation
-- **`CategoryBar`** – horizontale Gewerk-Filterleiste (setzt `?kategorie=<slug>`)
 - **`Footer`** – globaler Fußbereich
 
 ## 5. Datenmodell (MySQL)
