@@ -71,3 +71,7 @@ Zur zeitlichen Planung: [Die sechs Sanierungsphasen](/altbau-sanieren/reihenfolg
 ## Von der Modellrechnung zu deinen Zahlen
 
 Wenn du Fläche, Baujahr und geplante Maßnahmen kennst, kannst du die Kostenblöcke oben als Vorlage für dein eigenes Haus nutzen. Welche Arbeiten dazugehören, zeigt [die Checkliste](/altbau-sanieren/checkliste). Wie Förderung ins Spiel kommt, erklärt [die Seite zu Energieberatung und iSFP](/altbau-sanieren/energieberatung-isfp).
+
+<!-- foerderrechner -->
+Was du an Zuschüssen abziehen kannst, schätzt unser [Förderrechner](/foerderrechner).
+<!-- /foerderrechner -->

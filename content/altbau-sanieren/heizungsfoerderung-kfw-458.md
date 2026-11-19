@@ -37,6 +37,10 @@ Angenommen, es entstehen 28.000 € vollständig förderfähige Kosten für eine
 
 *Die Beispiele zeigen die Mathematik, nicht den individuellen Anspruch. Sie gelten für Anträge bis 31. Januar 2027; danach sinken Kostenobergrenze und Klimageschwindigkeitsbonus. Alle Boni sind an Bedingungen gebunden. Nicht jeder Eigentümer kann jeden Bonus kombinieren.*
 
+<!-- foerderrechner -->
+Was bei deiner Heizung herauskommt, schätzt unser [Förderrechner](/foerderrechner) in wenigen Fragen.
+<!-- /foerderrechner -->
+
 ## Was viele übersehen
 
 Förderfähig sind nur bestimmte Maßnahmen und Kosten. Die Fachunternehmer müssen technische Vorgaben einhalten. Für den Antrag wird eine Bestätigung zum Antrag benötigt, und Verträge sowie Antragszeitpunkt müssen stimmen. Auch die Kombination mit anderen Förderprogrammen sollte vorab geklärt werden.

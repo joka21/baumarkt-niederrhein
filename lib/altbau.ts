@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { Metadata } from "next";
+import { FOERDERRECHNER_OEFFENTLICH } from "@/lib/foerderung/sichtbarkeit";
 
 // Bereich "Altbau sanieren": Inhalte liegen als Markdown in content/altbau-sanieren
 // (Quelle: docs/altbau_texte_2026_v2.md) und werden beim Build gelesen.
@@ -22,6 +23,17 @@ export type AltbauSeite = {
 };
 
 export type Seitentyp = "uebersicht" | "loesung" | "checkliste" | "projekt" | "etappe";
+
+// Textlinks auf den Förderrechner stehen in den Markdown-Dateien zwischen
+// <!-- foerderrechner --> und <!-- /foerderrechner -->. Sie erscheinen nur, wenn der
+// Schalter in lib/foerderung/sichtbarkeit.ts an ist; sonst fällt der Block samt Leerzeile weg.
+const FOERDERRECHNER_BLOCK = /\n*<!-- foerderrechner -->\n([\s\S]*?)\n<!-- \/foerderrechner -->/g;
+
+function foerderrechnerLinks(inhalt: string): string {
+  return inhalt.replace(FOERDERRECHNER_BLOCK, (_, satz: string) =>
+    FOERDERRECHNER_OEFFENTLICH ? `\n\n${satz}` : ""
+  );
+}
 
 // Einfaches Frontmatter: "schluessel: wert" je Zeile, Strings in doppelten Anführungszeichen.
 function parse(datei: string): AltbauSeite {
@@ -48,7 +60,7 @@ function parse(datei: string): AltbauSeite {
     seoBeschreibung: felder.seoBeschreibung,
     stand: felder.stand,
     reihenfolge: Number(felder.reihenfolge),
-    inhalt: treffer[2].trim(),
+    inhalt: foerderrechnerLinks(treffer[2]).trim(),
   };
 }
 

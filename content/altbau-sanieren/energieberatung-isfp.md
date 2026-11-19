@@ -36,6 +36,10 @@ Der größere Teil des Vorteils kommt nicht aus dem Bonus, sondern aus der höhe
 
 *Vereinfachtes Rechenbeispiel für eine förderfähige Gebäudehüllenmaßnahme im Einfamilienhaus, ein Antrag pro Kalenderjahr, ohne weitere Boni, unter der Annahme, dass alle Voraussetzungen erfüllt sind. Keine individuelle Förderzusage.*
 
+<!-- foerderrechner -->
+Ob sich ein Sanierungsfahrplan bei deinen Kosten lohnt, zeigt dir unser [Förderrechner](/foerderrechner).
+<!-- /foerderrechner -->
+
 ## Das Wichtigste ist der Zeitpunkt
 
 Ein Förderantrag muss rechtzeitig gestellt werden. Bei Maßnahmen gilt häufig der Weg über einen Vertrag mit Förderbedingung, technische Projektbeschreibung und Antrag; die Regeln unterscheiden sich zwischen Programmen. Einfach beauftragen und anschließend nach Förderung suchen ist riskant. Bei einer geförderten Energieberatung gelten eigene Regeln für den Vorhabenbeginn und mögliche bedingte Verträge.
