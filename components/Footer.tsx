@@ -51,6 +51,18 @@ export default function Footer() {
             ))}
           </ul>
         </div>
+        <div className="mx-auto w-full max-w-7xl px-4 pb-6 sm:px-6">
+          <p className="text-body-sm text-text-muted">
+            Ein Projekt vom{" "}
+            <a
+              href="https://krefelder-laden.de"
+              className="whitespace-nowrap text-surface underline underline-offset-2 transition-colors hover:text-primary"
+            >
+              Krefelder Laden
+            </a>
+            . Global lernen, lokal handeln.
+          </p>
+        </div>
       </div>
     </footer>
   );
