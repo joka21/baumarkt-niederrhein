@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { Ref } from "react";
 import type { Antworten } from "@/lib/foerderung/fragen";
-import { datum, euro, euroSpanne, prozent } from "@/lib/foerderung/format";
+import { datum, euro, euroSpanne, prozent, zahlwort } from "@/lib/foerderung/format";
 import {
   NEBENFOERDERUNG,
   NRW_BANK,
@@ -17,14 +17,6 @@ import { TEXTLINK } from "./stil";
 export type ZielSeite = { slug: string; titel: string; url: string };
 
 type Daten = Extract<ErgebnisDaten, { art: "ergebnis" }>;
-
-const ZAHLWORT: Record<number, string> = {
-  2: "zwei", 3: "drei", 4: "vier", 5: "fünf", 6: "sechs", 7: "sieben", 8: "acht", 9: "neun", 10: "zehn",
-};
-
-function zahlwort(n: number): string {
-  return ZAHLWORT[n] ?? String(n);
-}
 
 function langesDatum(iso: string): string {
   return new Intl.DateTimeFormat("de-DE", { day: "numeric", month: "long", year: "numeric" }).format(

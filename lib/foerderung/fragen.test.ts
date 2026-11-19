@@ -3,12 +3,12 @@ import { betragGueltig, gestellteFragen, vollstaendig } from "./fragen";
 
 describe("Welche Fragen gestellt werden", () => {
   it("Vermietet: E5, E6 und E7 werden nicht gefragt", () => {
-    const fragen = gestellteFragen({ e1: "vermietet", e2: "ueber10", e3: ["heizung"], e4: 20_000 });
+    const fragen = gestellteFragen({ e1: "vermietet", e2: "alt", e3: ["heizung"], e4: 20_000 });
     expect(fragen).toEqual(["e1", "e2", "e3", "e4"]);
   });
 
   it("Selbst bewohnt mit Heizung: E4 bis E6, E7 nur bei mittlerem Einkommen", () => {
-    const basis = { e1: "selbst", e2: "ueber10", e3: ["heizung"] } as const;
+    const basis = { e1: "selbst", e2: "alt", e3: ["heizung"] } as const;
     expect(gestellteFragen({ ...basis, e3: ["heizung"], e6: "bis40" })).toContain("e7");
     expect(gestellteFragen({ ...basis, e3: ["heizung"], e6: "bis30" })).not.toContain("e7");
     expect(gestellteFragen({ ...basis, e3: ["heizung"], e6: "ueber60" })).not.toContain("e7");
@@ -16,22 +16,22 @@ describe("Welche Fragen gestellt werden", () => {
   });
 
   it("Hülle: E8 und E9, E10 nur bei Dach", () => {
-    expect(gestellteFragen({ e1: "selbst", e2: "ueber10", e3: ["fenster"] })).toEqual([
+    expect(gestellteFragen({ e1: "selbst", e2: "alt", e3: ["fenster"] })).toEqual([
       "e1",
       "e2",
       "e3",
       "e8",
       "e9",
     ]);
-    expect(gestellteFragen({ e1: "selbst", e2: "ueber10", e3: ["dach"] })).toContain("e10");
+    expect(gestellteFragen({ e1: "selbst", e2: "alt", e3: ["dach"] })).toContain("e10");
   });
 
   it("Gebäude unter fünf Jahren: nach E2 keine weitere Frage", () => {
-    expect(gestellteFragen({ e1: "selbst", e2: "unter5", e3: ["heizung"] })).toEqual(["e1", "e2"]);
+    expect(gestellteFragen({ e1: "selbst", e2: "jung", e3: ["heizung"] })).toEqual(["e1", "e2"]);
   });
 
   it("E3 braucht mindestens eine Auswahl", () => {
-    expect(vollstaendig({ e1: "selbst", e2: "ueber10", e3: [] })).toBe(false);
+    expect(vollstaendig({ e1: "selbst", e2: "alt", e3: [] })).toBe(false);
   });
 });
 

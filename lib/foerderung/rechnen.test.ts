@@ -17,12 +17,12 @@ function heizung(
   klima: Antworten["e5"],
   einkommen: Antworten["e6"],
   kind?: boolean,
-  e2: Antworten["e2"] = "5bis10"
+  e2: Antworten["e2"] = "mittel"
 ): Antworten {
   return { e1: "selbst", e2, e3: ["heizung"], e4: kosten, e5: klima, e6: einkommen, e7: kind };
 }
 
-function huelle(kosten: number, isfp: boolean, e2: Antworten["e2"] = "5bis10"): Antworten {
+function huelle(kosten: number, isfp: boolean, e2: Antworten["e2"] = "mittel"): Antworten {
   return { e1: "selbst", e2, e3: ["fassade"], e8: kosten, e9: isfp };
 }
 
@@ -65,7 +65,7 @@ describe("Prüffälle aus Abschnitt 11", () => {
   });
 
   it("P7: vermietet, 30 % von 28.000 € = 8.400 €, kein Steuerweg", () => {
-    const e = ergebnis({ e1: "vermietet", e2: "ueber10", e3: ["heizung"], e4: 32_000 });
+    const e = ergebnis({ e1: "vermietet", e2: "alt", e3: ["heizung"], e4: 32_000 });
     expect(e.summe).toEqual({ von: 8_400, bis: 8_400 });
     expect(e.steuer).toBeUndefined();
   });
@@ -77,7 +77,7 @@ describe("Prüffälle aus Abschnitt 11", () => {
   });
 
   it("P9: Hülle 50.000 € mit iSFP: Zuschuss 8.500 €, Steuer 10.000 € höher", () => {
-    const e = ergebnis(huelle(50_000, true, "ueber10"));
+    const e = ergebnis(huelle(50_000, true, "alt"));
     expect(e.huelle?.zuschuss).toBe(8_500);
     const s = e.steuer?.bloecke.find((b) => b.block === "huelle");
     expect(s?.betrag).toBe(10_000);
@@ -92,7 +92,7 @@ describe("Prüffälle aus Abschnitt 11", () => {
   });
 
   it("P11: Hülle 80.000 € mit iSFP: 10.500 € auf 60.000 €, Steuer 16.000 €", () => {
-    const e = ergebnis(huelle(80_000, true, "ueber10"));
+    const e = ergebnis(huelle(80_000, true, "alt"));
     expect(e.huelle?.anrechenbar).toBe(60_000);
     expect(e.huelle?.gekappt).toBe(true);
     expect(e.huelle?.zuschuss).toBe(10_500);
@@ -115,7 +115,7 @@ describe("Prüffälle aus Abschnitt 11", () => {
   });
 
   it("P13: Heizung 45.000 €: Zuschuss 8.400 €, Steuer 9.000 € höher", () => {
-    const e = ergebnis(heizung(45_000, "nein", "ueber60", undefined, "ueber10"));
+    const e = ergebnis(heizung(45_000, "nein", "ueber60", undefined, "alt"));
     expect(e.summe.bis).toBe(8_400);
     const s = e.steuer?.bloecke[0];
     expect(s?.betrag).toBe(9_000);
@@ -126,14 +126,14 @@ describe("Prüffälle aus Abschnitt 11", () => {
 
 describe("Zusätzliche Prüfungen", () => {
   it("Dach mit kompletter Neueindeckung: Hinweis H3", () => {
-    const e = ergebnis({ e1: "selbst", e2: "ueber10", e3: ["dach"], e8: 30_000, e9: false, e10: true });
+    const e = ergebnis({ e1: "selbst", e2: "alt", e3: ["dach"], e8: 30_000, e9: false, e10: true });
     expect(e.hinweise.h3).toBe(true);
-    const ohne = ergebnis({ e1: "selbst", e2: "ueber10", e3: ["dach"], e8: 30_000, e9: false, e10: false });
+    const ohne = ergebnis({ e1: "selbst", e2: "alt", e3: ["dach"], e8: 30_000, e9: false, e10: false });
     expect(ohne.hinweise.h3).toBe(false);
   });
 
   it("Gebäude unter fünf Jahren: keine Berechnung, nur der Hinweis", () => {
-    const e: Ergebnis = rechnen({ e1: "selbst", e2: "unter5", e3: ["heizung"], e4: 20_000 }, STAND);
+    const e: Ergebnis = rechnen({ e1: "selbst", e2: "jung", e3: ["heizung"], e4: 20_000 }, STAND);
     expect(e.art).toBe("abbruch");
   });
 
@@ -181,7 +181,7 @@ describe("Weitere Regeln", () => {
 
   it("Heizung und Hülle: Zuschüsse addiert, Steuer je Block nie in der Summe", () => {
     const e = ergebnis({
-      ...heizung(45_000, "nein", "ueber60", undefined, "ueber10"),
+      ...heizung(45_000, "nein", "ueber60", undefined, "alt"),
       e3: ["heizung", "fenster"],
       e8: 50_000,
       e9: true,
@@ -192,7 +192,7 @@ describe("Weitere Regeln", () => {
 
   it("Steuer-Höchstbetrag 40.000 € je Objekt, im Verhältnis der Kosten aufgeteilt", () => {
     const e = ergebnis({
-      ...heizung(100_000, "nein", "ueber60", undefined, "ueber10"),
+      ...heizung(100_000, "nein", "ueber60", undefined, "alt"),
       e3: ["heizung", "dach"],
       e8: 150_000,
       e9: true,
@@ -207,7 +207,7 @@ describe("Weitere Regeln", () => {
   });
 
   it("Kein Steuerweg bei Gebäude 5 bis 10 Jahre", () => {
-    expect(ergebnis(huelle(50_000, true, "5bis10")).steuer).toBeUndefined();
+    expect(ergebnis(huelle(50_000, true, "mittel")).steuer).toBeUndefined();
   });
 
   it("Datum vor dem 21.07.2026: Warnhinweis", () => {

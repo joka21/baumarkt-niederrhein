@@ -283,7 +283,7 @@ export function rechnen(antworten: Antworten, datum: string): Ergebnis {
   const a = bereinigen(antworten);
   const stand = STAND_DER_REGELN;
 
-  if (a.e2 === "unter5") return { art: "abbruch", grund: "neubau", stand };
+  if (a.e2 === "jung") return { art: "abbruch", grund: "neubau", stand };
   if (!parameterGueltig(datum)) return { art: "warnung", stand };
 
   const heizung = mitHeizung(a) ? heizungsBlock(a, datum) : undefined;
@@ -294,8 +294,8 @@ export function rechnen(antworten: Antworten, datum: string): Ergebnis {
     bis: (heizung?.zuschuss.bis ?? 0) + (huelle?.zuschuss ?? 0),
   };
 
-  // Die Antwort "älter als 10 Jahre" in E2 entspricht STEUER.mindestalterJahre.
-  const steuerMoeglich = a.e1 === "selbst" && a.e2 === "ueber10";
+  // E2 = "alt" heißt älter als STEUER.mindestalterJahre.
+  const steuerMoeglich = a.e1 === "selbst" && a.e2 === "alt";
   const posten = [
     ...(heizung ? [{ block: "heizung" as const, kosten: heizung.kosten, zuschuss: heizung.zuschuss }] : []),
     ...(huelle

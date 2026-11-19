@@ -17,6 +17,15 @@ export function prozent(wert: number): string {
   return `${String(wert).replace(".", ",")} %`;
 }
 
+const ZAHLWORT: Record<number, string> = {
+  2: "zwei", 3: "drei", 4: "vier", 5: "fünf", 6: "sechs", 7: "sieben", 8: "acht", 9: "neun", 10: "zehn",
+};
+
+/** Kleine Zahlen als Wort ("fünf"), sonst als Ziffern. */
+export function zahlwort(n: number): string {
+  return ZAHLWORT[n] ?? String(n);
+}
+
 /** ISO-Datum "JJJJ-MM-TT" als "TT.MM.JJJJ". */
 export function datum(iso: string): string {
   const [j, m, t] = iso.split("-");

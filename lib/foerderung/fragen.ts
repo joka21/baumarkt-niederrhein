@@ -2,7 +2,9 @@
 // Reine Logik ohne Oberfläche.
 
 export type Nutzung = "selbst" | "vermietet";
-export type Alter = "unter5" | "5bis10" | "ueber10";
+/** Gebäudealter: jung = unter GEBAEUDE.mindestalterBestandJahre, alt = über
+ *  STEUER.mindestalterJahre, mittel = dazwischen (Grenzen in parameter.ts). */
+export type Alter = "jung" | "mittel" | "alt";
 export type Massnahme = "heizung" | "dach" | "fassade" | "decke" | "fenster";
 export type JaNeinWeissNicht = "ja" | "nein" | "weissNicht";
 export type Einkommen = "bis30" | "bis40" | "bis50" | "bis60" | "ueber60" | "keineAngabe";
@@ -44,8 +46,8 @@ export function mitHuelle(a: Antworten): boolean {
 
 /** Wird die Frage bei diesen Antworten gestellt? */
 export function wirdGefragt(id: FrageId, a: Antworten): boolean {
-  // Gebäude unter fünf Jahren: Berechnung endet nach E2.
-  if (a.e2 === "unter5" && id !== "e1" && id !== "e2") return false;
+  // Gebäude jünger als das Mindestalter der Bestandsförderung: Berechnung endet nach E2.
+  if (a.e2 === "jung" && id !== "e1" && id !== "e2") return false;
 
   const selbst = a.e1 === "selbst";
   switch (id) {

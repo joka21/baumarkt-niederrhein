@@ -10,8 +10,15 @@ import {
   type Antworten,
   type FrageId,
 } from "@/lib/foerderung/fragen";
-import { euro, heuteIso } from "@/lib/foerderung/format";
-import { HEIZUNG, RICHTWERTE, STAND_DER_REGELN, wertAm } from "@/lib/foerderung/parameter";
+import { euro, heuteIso, zahlwort } from "@/lib/foerderung/format";
+import {
+  GEBAEUDE,
+  HEIZUNG,
+  RICHTWERTE,
+  STAND_DER_REGELN,
+  STEUER,
+  wertAm,
+} from "@/lib/foerderung/parameter";
 import { rechnen, type Ergebnis as ErgebnisDaten } from "@/lib/foerderung/rechnen";
 import AuswahlFrage, { type Option } from "./AuswahlFrage";
 import BetragFrage, { betragAusText } from "./BetragFrage";
@@ -39,6 +46,10 @@ function einkommensOptionen(): Option[] {
   ];
 }
 
+// Altersgrenzen der Frage E2 aus den Parametern (Stand der Regeln).
+const BESTAND_JAHRE = wertAm(GEBAEUDE.mindestalterBestandJahre, STAND_DER_REGELN) ?? 0;
+const STEUER_JAHRE = wertAm(STEUER.mindestalterJahre, STAND_DER_REGELN) ?? 0;
+
 const AUSWAHL: Partial<
   Record<FrageId, { frage: string; optionen: Option[]; mehrfach?: boolean; hinweis?: string }>
 > = {
@@ -52,9 +63,9 @@ const AUSWAHL: Partial<
   e2: {
     frage: "Wie alt ist das Gebäude?",
     optionen: [
-      { wert: "unter5", label: "unter 5 Jahre" },
-      { wert: "5bis10", label: "5 bis 10 Jahre" },
-      { wert: "ueber10", label: "älter als 10 Jahre" },
+      { wert: "jung", label: `unter ${BESTAND_JAHRE} Jahre` },
+      { wert: "mittel", label: `${BESTAND_JAHRE} bis ${STEUER_JAHRE} Jahre` },
+      { wert: "alt", label: `älter als ${STEUER_JAHRE} Jahre` },
     ],
   },
   e3: {
@@ -127,16 +138,20 @@ export default function Foerderrechner({ seiten }: { seiten: ZielSeite[] }) {
   const [ergebnis, setErgebnis] = useState<ErgebnisDaten | null>(null);
   const [fehler, setFehler] = useState<string | null>(null);
 
+  const rahmen = useRef<HTMLDivElement>(null);
   const ueberschrift = useRef<HTMLHeadingElement>(null);
   const ersterLauf = useRef(true);
 
-  // Beim Wechsel der Frage den Fokus auf die neue Überschrift setzen (nicht beim Laden).
+  // Beim Wechsel der Frage (nicht beim Laden): Rechner direkt unter die Kopfzeile scrollen,
+  // damit Frage, Antworten und Knöpfe auf dem Handy ohne weiteres Scrollen sichtbar sind,
+  // und den Fokus auf die neue Überschrift setzen.
   useEffect(() => {
     if (ersterLauf.current) {
       ersterLauf.current = false;
       return;
     }
-    ueberschrift.current?.focus();
+    rahmen.current?.scrollIntoView({ block: "start" });
+    ueberschrift.current?.focus({ preventScroll: true });
   }, [schritt]);
 
   const fragen = gestellteFragen(antworten);
@@ -182,7 +197,7 @@ export default function Foerderrechner({ seiten }: { seiten: ZielSeite[] }) {
 
   if (schritt === "ergebnis" && ergebnis) {
     return (
-      <div className="mt-8 rounded-2xl border border-stroke p-5 sm:p-8">
+      <div ref={rahmen} className="mt-8 scroll-mt-20 rounded-2xl border border-stroke p-5 sm:p-8">
         {ergebnis.art === "ergebnis" && (
           <Ergebnis
             daten={ergebnis}
@@ -197,8 +212,8 @@ export default function Foerderrechner({ seiten }: { seiten: ZielSeite[] }) {
               Für dein Gebäude rechnen wir nicht weiter
             </h2>
             <p className="mt-3 text-text">
-              Dein Gebäude ist jünger als fünf Jahre. Die Bestandsförderung greift in der Regel erst
-              ab fünf Jahren.
+              Dein Gebäude ist jünger als {zahlwort(BESTAND_JAHRE)} Jahre. Die Bestandsförderung
+              greift in der Regel erst ab {zahlwort(BESTAND_JAHRE)} Jahren.
             </p>
             <Pflichthinweis stand={ergebnis.stand} />
           </div>
@@ -216,7 +231,7 @@ export default function Foerderrechner({ seiten }: { seiten: ZielSeite[] }) {
             <Pflichthinweis stand={ergebnis.stand} />
           </div>
         )}
-        <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+        <div className="mt-8 flex justify-between gap-3">
           <button type="button" onClick={zurueck} className={KNOPF_SEKUNDAER}>
             Zurück
           </button>
@@ -232,9 +247,12 @@ export default function Foerderrechner({ seiten }: { seiten: ZielSeite[] }) {
   const auswahl = AUSWAHL[frageId];
   const betrag = BETRAG[frageId];
 
+  // Mindesthöhe passt bei 360 x 640 unter die feste Kopfzeile. Die Knöpfe stehen direkt unter
+  // den Antworten: Bedienbarkeit auf dem Handy geht vor festem Platz für die Knöpfe.
   return (
+    <div ref={rahmen} className="mt-8 scroll-mt-20">
     <form
-      className="mt-8 flex min-h-[50rem] flex-col rounded-2xl border border-stroke p-5 sm:min-h-[45rem] sm:p-8"
+      className="min-h-[35rem] rounded-2xl border border-stroke p-5 sm:p-8"
       onSubmit={(e) => {
         e.preventDefault();
         weiter();
@@ -286,24 +304,25 @@ export default function Foerderrechner({ seiten }: { seiten: ZielSeite[] }) {
         )}
       </div>
 
-      <p id="rechner-fehler" aria-live="polite" className="mt-4 min-h-6 font-bold text-text">
+      <p id="rechner-fehler" aria-live="polite" className="mt-3 min-h-6 font-bold text-text">
         {fehler}
       </p>
 
-      <div className="mt-auto flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-between">
+      <div className="mt-3 flex justify-between gap-3">
         {index > 0 ? (
           <button type="button" onClick={zurueck} className={KNOPF_SEKUNDAER}>
             Zurück
           </button>
         ) : (
-          <span className="hidden sm:block" />
+          <span />
         )}
         <button type="submit" className={KNOPF_PRIMAER}>
           {index === fragen.length - 1 && istBeantwortet(frageId, antworten)
-            ? "Ergebnis anzeigen"
+            ? "Zum Ergebnis"
             : "Weiter"}
         </button>
       </div>
     </form>
+    </div>
   );
 }

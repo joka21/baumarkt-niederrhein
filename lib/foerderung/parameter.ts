@@ -72,6 +72,14 @@ export const HUELLE = {
 } satisfies Record<string, Zeitwert<unknown>[]>;
 
 // ---------------------------------------------------------------------------
+// Gebäude
+
+export const GEBAEUDE = {
+  /** Mindestalter in Jahren, ab dem die Bestandsförderung in der Regel greift (Frage E2) */
+  mindestalterBestandJahre: [{ wert: 5 }],
+} satisfies Record<string, Zeitwert<unknown>[]>;
+
+// ---------------------------------------------------------------------------
 // Steuerermäßigung (§ 35c EStG)
 
 export const STEUER = {
@@ -81,7 +89,7 @@ export const STEUER = {
   hoechstbetrag: [{ wert: 40_000 }],
   /** Verteilung in Prozent der Kosten auf drei Jahre (Summe = Satz) */
   verteilung: [{ wert: [7, 7, 6] }],
-  /** Mindestalter des Gebäudes in Jahren */
+  /** Mindestalter des Gebäudes in Jahren (Frage E2: "älter als …") */
   mindestalterJahre: [{ wert: 10 }],
 } satisfies Record<string, Zeitwert<unknown>[]>;
 
@@ -135,6 +143,7 @@ export const RICHTWERTE = {
 
 /** Parameter, aus denen Beträge berechnet werden. Fehlt einer am Datum: Warnhinweis. */
 export const RECHENPARAMETER: readonly Zeitwert<unknown>[][] = [
+  ...Object.values(GEBAEUDE),
   ...Object.values(HEIZUNG),
   ...Object.values(HUELLE),
   ...Object.values(STEUER),
