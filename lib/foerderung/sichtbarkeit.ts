@@ -6,6 +6,6 @@
 //   - kein Link im Hauptmenü (Kopf- und Fußzeile) und in den Altbau-Texten
 //
 // Zum Veröffentlichen nur hier auf true stellen.
-export const FOERDERRECHNER_OEFFENTLICH = false;
+export const FOERDERRECHNER_OEFFENTLICH = true;
 
 export const FOERDERRECHNER_URL = "/foerderrechner";
